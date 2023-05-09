@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="dam.a47471.wejam.FirstFragment"
+        android:id="@+id/loginFragment"
+        android:name="dam.a47471.wejam.view.LoginFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_login">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="dam.a47471.wejam.SecondFragment"
+        android:id="@+id/registerFragment"
+        android:name="dam.a47471.wejam.view.SignUpFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_sign_up">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/loginFragment" />
     </fragment>
 </navigation>
