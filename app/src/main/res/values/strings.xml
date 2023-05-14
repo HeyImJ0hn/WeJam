@@ -19,4 +19,27 @@
     <string name="login_with_google">Login with Google</string>
     <string name="username">Username</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="banner">banner</string>
+    <string name="edit">Edit</string>
+    <string name="settings">Settings</string>
+    <string name="profile_image">profile image</string>
+    <string name="real_name">Real Name</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="bottom_sheet_grapple">bottom sheet grapple</string>
+    <string name="media">Media</string>
+    <string name="events">Events</string>
+    <string name="bio">Bio</string>
+    <string name="socials">Socials</string>
+    <string name="url">URL</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="back">Back</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="connections">Connections</string>
+    <string name="connect">Connect</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

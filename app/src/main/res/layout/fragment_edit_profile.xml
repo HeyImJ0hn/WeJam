@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.profile.ProfileFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layoutDirection="rtl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/edit_profile"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/banner"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/banner"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_banner_compressed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="134dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/usernameInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="70dp"
+                            android:layout_marginEnd="40dp"
+                            android:autofillHints="username"
+                            android:background="@drawable/selector_input_outline"
+                            android:drawableEnd="@drawable/ic_baseline_person_outline_24"
+                            android:drawableTint="@drawable/selector_input_icon"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto_medium"
+                            android:hint="@string/username"
+                            android:inputType="textNoSuggestions"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:textColor="@drawable/selector_input_icon"
+                            android:textColorHint="@color/gray"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.508"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <EditText
+                            android:id="@+id/realNameInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="40dp"
+                            android:autofillHints="realName"
+                            android:background="@drawable/selector_input_outline"
+                            android:drawableEnd="@drawable/ic_baseline_person_outline_24"
+                            android:drawableTint="@drawable/selector_input_icon"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto_medium"
+                            android:hint="@string/real_name"
+                            android:inputType="textPersonName"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:textColor="@drawable/selector_input_icon"
+                            android:textColorHint="@color/gray"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/usernameInput" />
+
+                        <EditText
+                            android:id="@+id/emailInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="40dp"
+                            android:autofillHints="emailAddress"
+                            android:background="@drawable/selector_input_outline"
+                            android:drawableEnd="@drawable/ic_outline_email_24"
+                            android:drawableTint="@drawable/selector_input_icon"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto_medium"
+                            android:hint="@string/email"
+                            android:inputType="textEmailAddress"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:textColor="@drawable/selector_input_icon"
+                            android:textColorHint="@color/gray"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/realNameInput" />
+
+                        <EditText
+                            android:id="@+id/bioInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="40dp"
+                            android:autofillHints="bio"
+                            android:background="@drawable/selector_input_outline"
+                            android:drawableEnd="@drawable/ic_outline_edit_24"
+                            android:drawableTint="@drawable/selector_input_icon"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto_medium"
+                            android:hint="@string/bio"
+                            android:gravity="start|top"
+                            android:padding="8dp"
+                            android:inputType="textMultiLine"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:textColor="@drawable/selector_input_icon"
+                            android:textColorHint="@color/gray"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/emailInput" />
+
+                        <View
+                            android:id="@+id/divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/gray"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/bioInput" />
+
+                        <TextView
+                            android:id="@+id/socials"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/connections"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                        <LinearLayout
+                            android:id="@+id/socialsBtns"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/socials" >
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/spotifyBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:background="@drawable/button_gradient"
+                                android:backgroundTint="@color/black"
+                                android:drawableStart="@drawable/ic_spotify_24"
+                                android:drawablePadding="4dp"
+                                android:drawableTint="@color/white"
+                                android:fontFamily="@font/roboto_medium"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="6dp"
+                                android:text="@string/connect"
+                                android:textColor="@color/white" />
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/youtubeBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:background="@drawable/button_gradient"
+                                android:backgroundTint="@color/black"
+                                android:drawableStart="@drawable/ic_youtube_24"
+                                android:drawablePadding="4dp"
+                                android:drawableTint="@color/white"
+                                android:fontFamily="@font/roboto_medium"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="6dp"
+                                android:layout_marginStart="6dp"
+                                android:layout_marginEnd="6dp"
+                                android:text="@string/connect"
+                                android:textColor="@color/white" />
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/instagramBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:background="@drawable/button_gradient"
+                                android:backgroundTint="@color/black"
+                                android:drawableStart="@drawable/ic_instagram_24"
+                                android:drawablePadding="4dp"
+                                android:drawableTint="@color/white"
+                                android:fontFamily="@font/roboto_medium"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="6dp"
+                                android:text="@string/connect"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/gray"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/socialsBtns" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/updateBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="40dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/button_gradient"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/update_profile"
+                            android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/divider2" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="54dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="138dp"
+                        android:layout_height="138dp"
+                        android:contentDescription="@string/profile_image"
+                        android:src="@drawable/img_default_avatar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </FrameLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

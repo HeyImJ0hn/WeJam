@@ -9,6 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gradient_blue">#FF1D71B8</color>
     <color name="gradient_pink">#FFE6007E</color>
-    <color name="white_transparent">#00FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="gray">#FF8F9193</color>
 </resources>

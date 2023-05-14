@@ -11,12 +11,16 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dam.a47471.wejam.LoadingDialog
 import dam.a47471.wejam.R
+import dam.a47471.wejam.activities.InternalActivity
+import dam.a47471.wejam.activities.MainActivity
 import dam.a47471.wejam.databinding.FragmentSignUpBinding
 import dam.a47471.wejam.viewmodel.SignUpViewModel
 
@@ -43,43 +47,23 @@ class SignUpFragment : Fragment() {
         }
 
         binding.signUpBtn.setOnClickListener {
-            if (isEmailValid(binding.emailInput.text.toString())) {
-                registerUser(binding.emailInput.text.toString(), binding.passwordInput.text.toString())
-            }
+            (activity as MainActivity).loadingDialog.show()
+            viewModel.registerUser(binding.emailInput.text.toString(), binding.passwordInput.text.toString(), binding.confirmPasswordInput.text.toString(), binding.usernameInput.text.toString())
         }
 
-    }
-
-    private fun registerUser(email: String, password: String) {
-        val auth = Firebase.auth
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task: Task<AuthResult> ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    Toast.makeText(
-                        activity?.baseContext,
-                        "User registered",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    // change activity
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        activity?.baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    //updateUI(null)
-                }
+        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner, Observer<Boolean> { isRegistrationSuccessful ->
+            if (isRegistrationSuccessful) {
+                Toast.makeText(context, "Registered user", Toast.LENGTH_SHORT).show()
+            } else {
+                (activity as InternalActivity).loadingDialog.dismiss()
+                Toast.makeText(context, "Failed to register user", Toast.LENGTH_SHORT).show()
             }
+        })
     }
 
-    private fun isEmailValid(email: String): Boolean {
-        val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9._-]+")
-        return emailPattern.matches(email)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as MainActivity).loadingDialog.dismiss()
     }
-
 
 }

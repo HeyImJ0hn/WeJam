@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/bottom_home"
+        android:icon="@drawable/selector_bottom_nav_home"
+        android:title="Home"
+        app:showAsAction="always"
+        android:iconTintMode="src_in"
+        android:orderInCategory="1" />
+    <item android:id="@+id/bottom_search"
+        android:icon="@drawable/selector_bottom_nav_search"
+        android:title="Search"
+        app:showAsAction="always"
+        android:iconTintMode="src_in"
+        android:orderInCategory="2" />
+    <item android:id="@+id/bottom_learn"
+        android:icon="@drawable/selector_bottom_nav_learn"
+        android:title="Learn"
+        app:showAsAction="always"
+        android:iconTintMode="src_in"
+        android:orderInCategory="3" />
+    <item android:id="@+id/bottom_inbox"
+        android:icon="@drawable/selector_bottom_nav_inbox"
+        android:title="Inbox"
+        app:showAsAction="always"
+        android:iconTintMode="src_in"
+        android:orderInCategory="4" />
+    <item android:id="@+id/bottom_profile"
+        android:icon="@drawable/selector_bottom_nav_profile"
+        android:title="Profile"
+        app:showAsAction="always"
+        android:iconTintMode="src_in"
+        android:orderInCategory="5" />
+</menu>
