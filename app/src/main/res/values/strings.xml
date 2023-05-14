@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">WeJam</string>
     <string name="wejam_logo">wejam_logo</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
@@ -10,6 +10,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="mapbox_access_token" tools:ignore="Typos">pk.eyJ1Ijoiam9objM1MSIsImEiOiJjbGhudHpkY20xcGo1M2xueDM4dXZlNWRhIn0.YM0uZw3BJ01mdsH4XpBezQ</string>
+
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -40,6 +43,10 @@
     <string name="update_profile">Update Profile</string>
     <string name="connections">Connections</string>
     <string name="connect">Connect</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="friends">Friends</string>
+    <string name="popular">Popular</string>
+    <string name="event_type">Event Type</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
 </resources>

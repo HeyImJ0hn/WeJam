@@ -22,16 +22,23 @@ class Repository {
     private var database: DatabaseReference = Firebase.database.reference
     private var storage: FirebaseStorage = Firebase.storage
 
-    val pfpResult = MutableLiveData<Boolean>();
+    private val _pfpResult = MutableLiveData<Boolean>();
+    val pfpResult: LiveData<Boolean>
+        get() = _pfpResult
+
+    private val _bannerResult = MutableLiveData<Boolean>();
+    val bannerResult: LiveData<Boolean>
+        get() = _bannerResult
 
     fun writeNewUser(
         userId: String,
         username: String,
         realName: String,
         email: String,
-        bio: String
+        bio: String,
+        uri: String
     ) {
-        val user = User(username, realName, email, bio)
+        val user = User(username, realName, email, bio, uri)
         database.child("users").child(userId).setValue(user)
     }
 
@@ -53,6 +60,13 @@ class Repository {
         })
     }
 
+    fun updateBanner(userId: String, uri: Uri?) {
+        val users = database.child("users")
+        val userReference = users.child(userId)
+
+        userReference.child("banner").setValue(uri.toString())
+    }
+
     fun getUser(userId: String, callback: (User?) -> Unit) {
         val userRef = database.child("users").child(userId)
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -70,11 +84,21 @@ class Repository {
 
     fun uploadProfilePicture(userId: String, uri: Uri) {
         storage.reference.child("profile").child(userId).child("picture").putFile(uri).addOnCompleteListener {
-            pfpResult.value = it.isSuccessful
+            _pfpResult.value = it.isSuccessful
         }
     }
 
     fun getProfilePicture(userId: String): Task<Uri> {
         return storage.reference.child("profile").child(userId).child("picture").downloadUrl
+    }
+
+    fun uploadBannerPicture(userId: String, uri: Uri) {
+        storage.reference.child("profile").child(userId).child("banner").putFile(uri).addOnCompleteListener {
+            _bannerResult.value = it.isSuccessful
+        }
+    }
+
+    fun getBannerPicture(userId: String): Task<Uri> {
+        return storage.reference.child("profile").child(userId).child("banner").downloadUrl
     }
 }

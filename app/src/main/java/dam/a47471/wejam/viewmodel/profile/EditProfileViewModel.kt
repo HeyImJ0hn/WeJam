@@ -6,9 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import dam.a47471.wejam.model.Repository
 import dam.a47471.wejam.model.User
 
@@ -43,16 +40,32 @@ class EditProfileViewModel : ViewModel() {
         repository.updatePicture(uri)
     }
 
+    fun updateBanner(userId: String, uri: Uri) {
+        repository.updateBanner(userId, uri)
+    }
+
     fun uploadProfilePicture(userId: String, uri: Uri) {
         repository.uploadProfilePicture(userId, uri)
+    }
+
+    fun uploadBannerPicture(userId: String, uri: Uri) {
+        repository.uploadBannerPicture(userId, uri)
     }
 
     fun getProfilePictureFromStorage(userId: String): Task<Uri> {
         return repository.getProfilePicture(userId)
     }
 
-    fun getPfpResult(): MutableLiveData<Boolean> {
+    fun getPfpResult(): LiveData<Boolean> {
         return repository.pfpResult
+    }
+
+    fun getBannerPictureFromStorage(userId: String): Task<Uri> {
+        return repository.getBannerPicture(userId)
+    }
+
+    fun getBannerResult(): LiveData<Boolean> {
+        return repository.bannerResult
     }
 
     fun loadUser(userId: String) {

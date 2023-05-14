@@ -1,9 +1,10 @@
-package dam.a47471.wejam
+package dam.a47471.wejam.utils
 
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import dam.a47471.wejam.R
 
 class LoadingDialog(context: Context) {
     private val dialog = Dialog(context)

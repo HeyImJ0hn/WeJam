@@ -1,23 +1,14 @@
 package dam.a47471.wejam.view
 
-import android.content.ContentValues.TAG
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import dam.a47471.wejam.LoadingDialog
 import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.activities.MainActivity

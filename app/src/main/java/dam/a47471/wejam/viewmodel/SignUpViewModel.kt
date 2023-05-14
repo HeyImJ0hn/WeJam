@@ -1,5 +1,6 @@
 package dam.a47471.wejam.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,7 +26,7 @@ class SignUpViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
-                    Repository().writeNewUser(user!!.uid, name, "", email, "")
+                    Repository().writeNewUser(user!!.uid, name, "", email, "", Uri.EMPTY.toString())
                     _isRegistrationSuccessful.value = true
                 } else {
                     _isRegistrationSuccessful.value = false

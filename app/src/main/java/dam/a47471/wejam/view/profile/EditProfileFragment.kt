@@ -1,17 +1,16 @@
 package dam.a47471.wejam.view.profile
 
-import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.view.ViewGroup.LayoutParams
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -23,10 +22,12 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.databinding.FragmentEditProfileBinding
 import dam.a47471.wejam.viewmodel.profile.EditProfileViewModel
+import java.io.InputStream
 
 
 class EditProfileFragment : Fragment(), MenuProvider {
@@ -34,28 +35,50 @@ class EditProfileFragment : Fragment(), MenuProvider {
     private lateinit var viewModel: EditProfileViewModel
     private lateinit var binding: FragmentEditProfileBinding
     private lateinit var pickPhotoLauncher: ActivityResultLauncher<String>
+    private lateinit var activity: InternalActivity
 
     private val STORAGE_PERMISSION_CODE = 1
 
+    private var isProfilePicture = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity = (requireActivity() as InternalActivity)
+
         pickPhotoLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            (activity as InternalActivity).loadingDialog.show()
+            activity.loadingDialog.show()
             if (uri != null) {
-                viewModel.uploadProfilePicture(Firebase.auth.currentUser!!.uid, uri)
-                viewModel.getPfpResult().observe(viewLifecycleOwner, Observer { data ->
-                    if (data)
-                        viewModel.getProfilePictureFromStorage(Firebase.auth.currentUser!!.uid)
-                            .addOnSuccessListener {
-                                viewModel.updatePicture(it)
-                                Glide.with(requireContext()).load(it).into(binding.profileImage)
-                                (activity as InternalActivity).loadingDialog.dismiss()
-                            }.addOnFailureListener {
-                                (activity as InternalActivity).loadingDialog.dismiss()
-                                Toast.makeText(requireContext(), "Failed to get image", Toast.LENGTH_SHORT).show()
-                            }
-                })
+                if (isProfilePicture) {
+                    viewModel.uploadProfilePicture(Firebase.auth.currentUser!!.uid, uri)
+                    viewModel.getPfpResult().observe(viewLifecycleOwner, Observer { data ->
+                        if (data)
+                            viewModel.getProfilePictureFromStorage(Firebase.auth.currentUser!!.uid)
+                                .addOnCompleteListener {
+                                    if (it.isSuccessful) {
+                                        viewModel.updatePicture(it.result)
+                                        Glide.with(requireContext()).load(it.result).into(binding.profileImage)
+                                    } else
+                                        Toast.makeText(requireContext(), "Failed to get image", Toast.LENGTH_SHORT).show()
+                                    activity.loadingDialog.dismiss()
+                                }
+                    })
+                } else {
+                    viewModel.uploadBannerPicture(Firebase.auth.currentUser!!.uid, uri)
+                    viewModel.getBannerResult().observe(viewLifecycleOwner, Observer { data ->
+                        if (data)
+                            viewModel.getBannerPictureFromStorage(Firebase.auth.currentUser!!.uid)
+                                .addOnCompleteListener {
+                                    if (it.isSuccessful) {
+                                        viewModel.updateBanner(Firebase.auth.currentUser!!.uid, it.result)
+                                        Glide.with(requireContext()).load(it.result).into(binding.banner)
+                                    } else
+                                        Toast.makeText(requireContext(), "Failed to get image", Toast.LENGTH_SHORT).show()
+                                    activity.loadingDialog.dismiss()
+                                }
+                    })
+                }
             }
+            activity.loadingDialog.dismiss()
         }
     }
 
@@ -66,15 +89,14 @@ class EditProfileFragment : Fragment(), MenuProvider {
         viewModel = ViewModelProvider(this)[EditProfileViewModel::class.java]
         binding = FragmentEditProfileBinding.inflate(inflater, container, false)
 
-        val menuHost = requireActivity() as MenuHost
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        (activity as MenuHost).addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        activity.setSupportActionBar(binding.toolbar)
 
         val auth = FirebaseAuth.getInstance()
 
@@ -84,6 +106,8 @@ class EditProfileFragment : Fragment(), MenuProvider {
             binding.usernameInput.setText(user.username)
             binding.realNameInput.setText(user.realName)
             binding.bioInput.setText(user.bio)
+            if (user.banner != "")
+                Glide.with(requireContext()).load(user.banner).into(binding.banner)
         }
         binding.emailInput.setText(auth.currentUser?.email)
         if (auth.currentUser!!.photoUrl != null)
@@ -96,12 +120,12 @@ class EditProfileFragment : Fragment(), MenuProvider {
                 binding.emailInput.text.toString(),
                 binding.bioInput.text.toString()
             )
-            (activity as InternalActivity).loadingDialog.show()
+            activity.loadingDialog.show()
             findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
             Toast.makeText(requireContext(), "Updated Profile", Toast.LENGTH_SHORT).show()
         }
 
-        binding.profileImage.setOnClickListener {
+        binding.changePicture.setOnClickListener {
             if (requireContext().checkSelfPermission(READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
                     requireActivity(),
@@ -109,15 +133,29 @@ class EditProfileFragment : Fragment(), MenuProvider {
                     STORAGE_PERMISSION_CODE
                 )
             } else {
+                isProfilePicture = true
                 pickPhotoLauncher.launch("image/*")
-                (activity as InternalActivity).loadingDialog.show()
+                activity.loadingDialog.show()
+            }
+        }
+
+        binding.changeBanner.setOnClickListener {
+            if (requireContext().checkSelfPermission(READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(READ_EXTERNAL_STORAGE),
+                    STORAGE_PERMISSION_CODE
+                )
+            } else {
+                isProfilePicture = false
+                pickPhotoLauncher.launch("image/*")
+                activity.loadingDialog.show()
             }
         }
 
         binding.toolbar.title = ""
-        binding.banner.setImageDrawable((activity as InternalActivity).resizeImage(R.drawable.img_banner))
 
-        (activity as InternalActivity).binding.bottomNav.visibility = View.GONE
+        activity.binding.bottomNav.visibility = View.GONE
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -135,11 +173,10 @@ class EditProfileFragment : Fragment(), MenuProvider {
     }
 
     override fun onDestroyView() {
-        val menuHost = requireActivity() as MenuHost
-        menuHost.removeMenuProvider(this)
+        (activity as MenuHost).removeMenuProvider(this)
         super.onDestroyView()
-        (activity as InternalActivity).loadingDialog.dismiss()
-        (activity as InternalActivity).binding.bottomNav.visibility = View.VISIBLE
+        activity.loadingDialog.dismiss()
+        activity.binding.bottomNav.visibility = View.VISIBLE
     }
 
     @Deprecated("Deprecated in Java")
@@ -151,7 +188,7 @@ class EditProfileFragment : Fragment(), MenuProvider {
         when (requestCode) {
             STORAGE_PERMISSION_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickPhotoLauncher.launch("image/*")
+                    Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
                 }

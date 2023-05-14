@@ -4,17 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.core.Repo
 import com.google.firebase.ktx.Firebase
-import dam.a47471.wejam.LoadingDialog
+import dam.a47471.wejam.utils.LoadingDialog
 import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.ActivityMainBinding
-import dam.a47471.wejam.model.Repository
 
 class MainActivity : AppCompatActivity() {
 
