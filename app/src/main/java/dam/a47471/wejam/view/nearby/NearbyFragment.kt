@@ -6,11 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayoutMediator
-import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.FragmentNearbyBinding
 import dam.a47471.wejam.view.nearby.tabs.NearbyPagerAdapter
-import dam.a47471.wejam.view.profile.tabs.ProfilePagerAdapter
 import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
 
 class NearbyFragment : Fragment() {
@@ -30,6 +34,7 @@ class NearbyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewPager.isUserInputEnabled = false
         binding.viewPager.adapter =
             NearbyPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
