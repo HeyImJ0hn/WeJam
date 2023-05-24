@@ -49,4 +49,12 @@
     <string name="event_type">Event Type</string>
     <string name="map">Map</string>
     <string name="list">List</string>
+    <string name="create_event">Create Event</string>
+    <string name="name">Name</string>
+    <string name="jam_session">Jam Session</string>
+    <string name="concert">Concert</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="create">Create</string>
 </resources>

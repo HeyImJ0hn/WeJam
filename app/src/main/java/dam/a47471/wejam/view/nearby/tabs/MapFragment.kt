@@ -1,8 +1,10 @@
 package dam.a47471.wejam.view.nearby.tabs
 
 import android.Manifest
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dam.a47471.wejam.R
+import dam.a47471.wejam.databinding.DialogCreateEventBinding
 import dam.a47471.wejam.databinding.FragmentNearbyMapBinding
 import kotlin.math.pow
 
@@ -47,7 +50,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addEvent.setOnClickListener {
-            // TODO
+            val createEventDialog = Dialog(requireContext())
+            createEventDialog.setContentView(R.layout.dialog_create_event)
+            createEventDialog.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            createEventDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            createEventDialog.setCancelable(true)
+            createEventDialog.show()
+
+            val dialogBinding: DialogCreateEventBinding = DialogCreateEventBinding.inflate(layoutInflater)
+            createEventDialog.setContentView(dialogBinding.root)
         }
     }
 
