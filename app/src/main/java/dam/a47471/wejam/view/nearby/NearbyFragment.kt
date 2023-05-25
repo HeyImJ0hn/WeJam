@@ -43,6 +43,21 @@ class NearbyFragment : Fragment() {
                 else -> "List"
             }
         }.attach()
+
+        /*binding.addEvent.setOnClickListener {
+            val createEventDialog = Dialog(view.context)
+            createEventDialog.setContentView(R.layout.dialog_create_event)
+            createEventDialog.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            createEventDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            createEventDialog.setCancelable(true)
+            createEventDialog.show()
+
+            /*val dialogBinding: DialogCreateEventBinding = DialogCreateEventBinding.inflate(layoutInflater)
+            createEventDialog.setContentView(dialogBinding.root)*/
+        }*/
     }
 
 }

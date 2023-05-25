@@ -29,6 +29,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var binding: FragmentNearbyMapBinding
     private lateinit var googleMap: GoogleMap
+    private lateinit var createEventDialog: Dialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +44,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .commit()
         mapFragment.getMapAsync(this)
 
+        createEventDialog = Dialog(requireContext())
+
         return binding.root
     }
 
@@ -50,11 +53,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addEvent.setOnClickListener {
-            val createEventDialog = Dialog(requireContext())
             createEventDialog.setContentView(R.layout.dialog_create_event)
             createEventDialog.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
             createEventDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             createEventDialog.setCancelable(true)
@@ -62,6 +64,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             val dialogBinding: DialogCreateEventBinding = DialogCreateEventBinding.inflate(layoutInflater)
             createEventDialog.setContentView(dialogBinding.root)
+            dialogBinding.createBtn.setOnClickListener {
+                // Create Event -> viewmodel
+            }
+            dialogBinding.cancelBtn.setOnClickListener {
+                createEventDialog.dismiss()
+            }
         }
     }
 
