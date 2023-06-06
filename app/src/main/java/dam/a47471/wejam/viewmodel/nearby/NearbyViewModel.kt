@@ -8,11 +8,10 @@ import java.util.*
 
 class NearbyViewModel : ViewModel() {
 
-    val repository: Repository = Repository()
+    private val repository: Repository = Repository()
 
-    fun createEvent(owner: UUID, name: String, type: EventType, time: String, date: String) {
-        val event = Event(owner, name, type, time, date)
-        // Upload to DB
+    fun createEvent(owner: String, name: String, type: EventType, time: String, date: String) {
+        repository.createEvent(Event(owner, name, type, time, date))
     }
 
 }

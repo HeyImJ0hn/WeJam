@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
@@ -21,6 +23,7 @@ class Repository {
 
     private var database: DatabaseReference = Firebase.database.reference
     private var storage: FirebaseStorage = Firebase.storage
+    private val fs: FirebaseFirestore = Firebase.firestore
 
     private val _pfpResult = MutableLiveData<Boolean>();
     val pfpResult: LiveData<Boolean>
@@ -100,5 +103,16 @@ class Repository {
 
     fun getBannerPicture(userId: String): Task<Uri> {
         return storage.reference.child("profile").child(userId).child("banner").downloadUrl
+    }
+
+    fun createEvent(event: Event) {
+        fs.collection(event.owner)
+            .add(event)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
     }
 }

@@ -2,6 +2,7 @@ package dam.a47471.wejam.view.nearby.tabs
 
 import android.Manifest
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,7 +11,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,9 +24,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.auth.FirebaseAuth
 import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.DialogCreateEventBinding
 import dam.a47471.wejam.databinding.FragmentNearbyMapBinding
+import dam.a47471.wejam.model.EventType
+import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
+import java.util.*
 import kotlin.math.pow
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -30,12 +38,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentNearbyMapBinding
     private lateinit var googleMap: GoogleMap
     private lateinit var createEventDialog: Dialog
+    private lateinit var viewModel: NearbyViewModel
+
+    private lateinit var dialogBinding: DialogCreateEventBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNearbyMapBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[NearbyViewModel::class.java]
 
         val mapFragment = SupportMapFragment.newInstance()
         requireActivity().supportFragmentManager
@@ -62,13 +75,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             createEventDialog.setCancelable(true)
             createEventDialog.show()
 
-            val dialogBinding: DialogCreateEventBinding = DialogCreateEventBinding.inflate(layoutInflater)
+            dialogBinding = DialogCreateEventBinding.inflate(layoutInflater)
             createEventDialog.setContentView(dialogBinding.root)
             dialogBinding.createBtn.setOnClickListener {
-                // Create Event -> viewmodel
+                viewModel.createEvent(FirebaseAuth.getInstance().currentUser!!.uid, dialogBinding.eventName.text.toString(), EventType.JAM, "19:00", "10-12-2023")
             }
             dialogBinding.cancelBtn.setOnClickListener {
                 createEventDialog.dismiss()
+            }
+            dialogBinding.timeInput.setOnClickListener {
+                showTimePickerDialog()
             }
         }
     }
@@ -100,6 +116,28 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePickerDialog = TimePickerDialog(
+            requireContext(),
+            { view: TimePicker?, hourOfDay: Int, minute: Int ->
+                // Handle the selected time
+                // hourOfDay: selected hour
+                // minute: selected minute
+                // You can perform any desired action with the selected time
+                dialogBinding.timeInput.setText("${hourOfDay}:${minute}")
+            },
+            hour,
+            minute,
+            true
+        )
+
+        timePickerDialog.show()
     }
 
 }
