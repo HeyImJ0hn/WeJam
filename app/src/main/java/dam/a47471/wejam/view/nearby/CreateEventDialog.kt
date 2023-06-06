@@ -39,9 +39,9 @@ class CreateEventDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.logoutBtn.setOnClickListener {
+        /*binding.logoutBtn.setOnClickListener {
             dismiss()
-        }
+        }*/
 
     }
 

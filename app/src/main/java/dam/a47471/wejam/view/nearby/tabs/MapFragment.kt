@@ -66,7 +66,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addEvent.setOnClickListener {
-            createEventDialog.setContentView(R.layout.dialog_create_event)
+            createEventDialog.setContentView(R.layout.nearby_create_event_dialog)
             createEventDialog.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -75,7 +75,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             createEventDialog.setCancelable(true)
             createEventDialog.show()
 
-            dialogBinding = DialogCreateEventBinding.inflate(layoutInflater)
+            /*dialogBinding = DialogCreateEventBinding.inflate(layoutInflater)
             createEventDialog.setContentView(dialogBinding.root)
             dialogBinding.createBtn.setOnClickListener {
                 viewModel.createEvent(FirebaseAuth.getInstance().currentUser!!.uid, dialogBinding.eventName.text.toString(), EventType.JAM, "19:00", "10-12-2023")
@@ -85,15 +85,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             dialogBinding.timeInput.setOnClickListener {
                 showTimePickerDialog()
-            }
+            }*/
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         val defaultZoomLevel = 13.0f
         val cameraUpdate = CameraUpdateFactory.zoomTo(defaultZoomLevel)
-        googleMap.moveCamera(cameraUpdate)
-        googleMap.isMyLocationEnabled = true
 
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         if (ActivityCompat.checkSelfPermission(
@@ -104,8 +102,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 2)
             return
         }
+
+        googleMap.moveCamera(cameraUpdate)
+        googleMap.isMyLocationEnabled = true
+
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 val userPos = LatLng(location.latitude, location.longitude)
