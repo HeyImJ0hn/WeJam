@@ -53,18 +53,10 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
-    <style name="CustomToggleButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <!-- Customize the background color when the button is checked -->
-        <item name="colorOnPrimary">@color/gradient_blue</item>
+    <style name="CustomToggleButtonStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="backgroundTint">@drawable/selector_toggle_button</item>
 
-        <!-- Customize the background color when the button is not checked -->
-        <item name="colorSurface">@color/white</item>
-
-        <!-- Customize the text color when the button is checked -->
-        <item name="android:textColor">@color/white</item>
-
-        <!-- Customize the text color when the button is not checked -->
-        <item name="android:textColorSecondary">@color/gradient_blue</item>
+        <item name="android:textColor">@drawable/selector_toggle_button_text</item>
     </style>
 
 </resources>

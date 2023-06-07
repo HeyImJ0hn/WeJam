@@ -29,6 +29,8 @@ import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.DialogCreateEventBinding
 import dam.a47471.wejam.databinding.FragmentNearbyMapBinding
 import dam.a47471.wejam.model.EventType
+import dam.a47471.wejam.view.nearby.CreateEventDialog
+import dam.a47471.wejam.view.profile.SettingsDialog
 import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
 import java.util.*
 import kotlin.math.pow
@@ -66,26 +68,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addEvent.setOnClickListener {
-            createEventDialog.setContentView(R.layout.nearby_create_event_dialog)
-            createEventDialog.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            createEventDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            createEventDialog.setCancelable(true)
-            createEventDialog.show()
-
-            /*dialogBinding = DialogCreateEventBinding.inflate(layoutInflater)
-            createEventDialog.setContentView(dialogBinding.root)
-            dialogBinding.createBtn.setOnClickListener {
-                viewModel.createEvent(FirebaseAuth.getInstance().currentUser!!.uid, dialogBinding.eventName.text.toString(), EventType.JAM, "19:00", "10-12-2023")
-            }
-            dialogBinding.cancelBtn.setOnClickListener {
-                createEventDialog.dismiss()
-            }
-            dialogBinding.timeInput.setOnClickListener {
-                showTimePickerDialog()
-            }*/
+            CreateEventDialog().show(parentFragmentManager, "CreateEvent")
         }
     }
 

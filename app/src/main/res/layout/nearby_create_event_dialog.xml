@@ -3,41 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/bottomSheetGrapple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/bottom_sheet_grapple"
+            android:src="@drawable/ic_bottom_sheet_grapple"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/createEventTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/create_event"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottomSheetGrapple" />
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/bottomSheetGrapple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/ic_bottom_sheet_grapple"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/bottom_sheet_grapple" />
+            android:layout_height="370dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/createEventTitle">
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/eventNameInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:hint="@string/event_name"
-                app:boxStrokeColor="@color/gradient_blue"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bottomSheetGrapple">
+                app:hintTextColor="@color/black"
+                app:startIconDrawable="@drawable/ic_outline_edit_24"
+                app:boxStrokeColor="@color/gradient_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:fontFamily="@font/roboto_medium"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,32 +65,121 @@
                 android:id="@+id/eventButtonGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventNameInput">
+                android:layout_marginTop="20dp"
+                app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/jamBtn"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/CustomToggleButtonStyle"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:text="Jam Session"
                     android:fontFamily="@font/roboto_medium"
-                    app:strokeColor="@color/gradient_blue"/>
+                    android:text="@string/jam_session"
+                    android:textSize="12sp"
+                    app:rippleColor="@color/gradient_pink"
+                    app:strokeColor="@color/gradient_blue" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/concertBtn"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/CustomToggleButtonStyle"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:text="Concert"
                     android:fontFamily="@font/roboto_medium"
-                    app:strokeColor="@color/gradient_blue"/>
+                    android:text="@string/concert"
+                    android:textSize="12sp"
+                    app:rippleColor="@color/gradient_pink"
+                    app:strokeColor="@color/gradient_blue" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/eventLocationInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/location"
+                android:layout_marginTop="20dp"
+                app:hintTextColor="@color/black"
+                app:startIconDrawable="@drawable/ic_outline_location_on_24"
+                app:boxStrokeColor="@color/gradient_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/locationEditText"
+                    android:focusableInTouchMode="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/timeInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/time"
+                    android:layout_marginEnd="20dp"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/dateInput"
+                    app:startIconDrawable="@drawable/ic_outline_access_time_24"
+                    app:boxStrokeColor="@color/gradient_blue">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/timeEditText"
+                        android:focusableInTouchMode="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dateInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/date"
+                    android:layout_marginStart="20dp"
+                    app:hintTextColor="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/timeInput"
+                    app:startIconDrawable="@drawable/ic_outline_date_range_24"
+                    app:boxStrokeColor="@color/gradient_blue">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:focusableInTouchMode="false"
+                        android:id="@+id/dateEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_medium" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginTop="20dp"
+                android:id="@+id/createBtn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/button_gradient"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="60dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/create"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

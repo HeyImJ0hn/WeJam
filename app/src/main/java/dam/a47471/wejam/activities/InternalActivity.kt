@@ -15,11 +15,13 @@ import android.view.Display
 import android.view.WindowManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.libraries.places.api.Places
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import dam.a47471.wejam.BuildConfig
 import dam.a47471.wejam.utils.LoadingDialog
 import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.ActivityInternalBinding
@@ -110,6 +112,8 @@ class InternalActivity : AppCompatActivity() {
                 R.id.profileFragment -> binding.bottomNav.selectedItemId = R.id.bottom_profile
             }
         }*/
+
+        Places.initialize(this, BuildConfig.MAPS_API_KEY)
     }
 
 
