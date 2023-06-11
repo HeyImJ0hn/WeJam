@@ -11,20 +11,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.api.Context
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dam.a47471.wejam.BuildConfig
 import dam.a47471.wejam.databinding.NearbyCreateEventDialogBinding
 import dam.a47471.wejam.databinding.ProfileSettingsDialogBinding
+import dam.a47471.wejam.model.EventType
 import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
 import dam.a47471.wejam.viewmodel.profile.SettingsDialogViewModel
 
@@ -32,6 +40,8 @@ class CreateEventDialog : BottomSheetDialogFragment() {
 
     private lateinit var binding: NearbyCreateEventDialogBinding
     private lateinit var viewModel: NearbyViewModel
+    private var longitude: Double = 0.0
+    private var latitude: Double = 0.0
 
     private val startAutocomplete =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -40,6 +50,8 @@ class CreateEventDialog : BottomSheetDialogFragment() {
                 if (intent != null) {
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     binding.locationEditText.setText(place.name)
+                    longitude = place.latLng!!.longitude
+                    latitude = place.latLng!!.latitude
                     Log.i(
                         TAG, "Place: ${place.name}, ${place.id}, ${place.latLng}"
                     )
@@ -71,6 +83,20 @@ class CreateEventDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.eventNameEditText.setOnFocusChangeListener { _, b ->
+            if (!b) {
+                if (binding.eventNameEditText.text!!.isEmpty())
+                    binding.eventNameEditText.error = "Event name cannot be empty"
+            } else {
+                binding.eventNameInput.isErrorEnabled = false
+            }
+        }
+
+        binding.eventButtonGroup.addOnButtonCheckedListener { _, _, isChecked ->
+            if (isChecked)
+                binding.eventTypeErrorIcon.visibility = View.GONE
+        }
+
         binding.locationEditText.setOnClickListener {
             // Set the fields to specify which types of place data to
             // return after the user has made a selection.
@@ -80,6 +106,8 @@ class CreateEventDialog : BottomSheetDialogFragment() {
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .build(requireContext())
             startAutocomplete.launch(intent)
+
+            binding.eventLocationInput.isErrorEnabled = false
 
             binding.locationEditText.isFocusableInTouchMode = true
             binding.locationEditText.requestFocus()
@@ -94,6 +122,8 @@ class CreateEventDialog : BottomSheetDialogFragment() {
             datePicker.show(childFragmentManager, "datePicker")
 
             datePicker.addOnPositiveButtonClickListener {
+                binding.dateInput.isErrorEnabled = false
+
                 binding.dateEditText.setText(datePicker.headerText)
                 binding.dateEditText.clearFocus()
             }
@@ -113,6 +143,8 @@ class CreateEventDialog : BottomSheetDialogFragment() {
             timePicker.show(childFragmentManager, "timePicker")
 
             timePicker.addOnPositiveButtonClickListener {
+                binding.timeInput.isErrorEnabled = false
+
                 binding.timeEditText.setText("${timePicker.hour}:${timePicker.minute}")
                 binding.timeEditText.clearFocus()
             }
@@ -120,6 +152,51 @@ class CreateEventDialog : BottomSheetDialogFragment() {
             binding.timeEditText.isFocusableInTouchMode = true
             binding.timeEditText.requestFocus()
             binding.timeEditText.isFocusableInTouchMode = false
+        }
+
+        binding.createBtn.setOnClickListener {
+
+            if (binding.eventNameEditText.text!!.isEmpty()) {
+                binding.eventNameEditText.error = "Event name cannot be empty"
+                return@setOnClickListener
+            }
+
+            if (!binding.jamBtn.isChecked && !binding.concertBtn.isChecked) {
+                binding.eventTypeErrorIcon.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+
+            if (binding.locationEditText.text!!.isEmpty()) {
+                binding.locationEditText.error = "Location cannot be empty"
+                return@setOnClickListener
+            }
+
+            if (binding.dateEditText.text!!.isEmpty()) {
+                binding.dateEditText.error = "Date cannot be empty"
+                return@setOnClickListener
+            }
+
+            if (binding.timeEditText.text!!.isEmpty()) {
+                binding.timeEditText.error = "Time cannot be empty"
+                return@setOnClickListener
+            }
+
+            viewModel.createEvent(
+                Firebase.auth.currentUser!!.uid,
+                binding.eventNameEditText.text.toString(),
+                EventType.valueOf(if (binding.jamBtn.isChecked) "JAM" else "CONCERT"),
+                binding.locationEditText.text.toString(),
+                latitude,
+                longitude,
+                binding.timeEditText.text.toString(),
+                binding.dateEditText.text.toString()
+            )
+            Toast.makeText(
+                requireContext(),
+                "Created event: ${binding.eventNameEditText.text.toString()}.",
+                Toast.LENGTH_SHORT
+            ).show()
+            dismiss()
         }
 
     }

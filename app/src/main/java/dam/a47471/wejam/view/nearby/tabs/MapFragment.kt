@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.DialogCreateEventBinding
@@ -92,6 +93,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         googleMap.moveCamera(cameraUpdate)
         googleMap.isMyLocationEnabled = true
 
+        viewModel.getEvents().observe(viewLifecycleOwner) {events ->
+            events.forEach {
+                println(it.name)
+                val lat = it.lat
+                val long = it.long
+                googleMap.addMarker(MarkerOptions().position(LatLng(lat, long)).title(it.name).snippet(it.time + " - " + it.date))
+            }
+        }
+
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 val userPos = LatLng(location.latitude, location.longitude)
@@ -103,27 +113,4 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
-
-    private fun showTimePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        val timePickerDialog = TimePickerDialog(
-            requireContext(),
-            { view: TimePicker?, hourOfDay: Int, minute: Int ->
-                // Handle the selected time
-                // hourOfDay: selected hour
-                // minute: selected minute
-                // You can perform any desired action with the selected time
-                dialogBinding.timeInput.setText("${hourOfDay}:${minute}")
-            },
-            hour,
-            minute,
-            true
-        )
-
-        timePickerDialog.show()
-    }
-
 }
