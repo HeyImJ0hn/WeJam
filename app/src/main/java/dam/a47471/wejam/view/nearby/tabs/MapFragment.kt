@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dam.a47471.wejam.R
 import dam.a47471.wejam.databinding.DialogCreateEventBinding
 import dam.a47471.wejam.databinding.FragmentNearbyMapBinding
@@ -104,6 +106,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
+                viewModel.updateLocation(Firebase.auth.currentUser!!.uid, location.latitude, location.longitude)
                 val userPos = LatLng(location.latitude, location.longitude)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(userPos))
 

@@ -58,4 +58,6 @@
     <string name="location">Location</string>
     <string name="create">Create</string>
     <string name="event_name">Event Name</string>
+    <string name="people">People</string>
+    <string name="organizer">Organizer</string>
 </resources>

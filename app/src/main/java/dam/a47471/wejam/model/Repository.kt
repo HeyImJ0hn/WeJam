@@ -58,6 +58,14 @@ class Repository {
         userReference.child("bio").setValue(bio)
     }
 
+    fun updateLocation(userId: String, lat: Double, long: Double) {
+        val users = database.child("users")
+        val userReference = users.child(userId)
+
+        userReference.child("lat").setValue(lat)
+        userReference.child("long").setValue(long)
+    }
+
     fun updatePicture(uri: Uri?) {
         FirebaseAuth.getInstance().currentUser?.updateProfile(
         userProfileChangeRequest {
@@ -116,6 +124,16 @@ class Repository {
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
             }
+    }
+
+    fun getUserFromId(userId: String): LiveData<User> {
+        val user = MutableLiveData<User>()
+        database.child("users").child(userId).get().addOnSuccessListener {
+            user.value = it.getValue(User::class.java)
+        }.addOnFailureListener {
+            println("Error getting data")
+        }
+        return user
     }
 
     fun getEvents(): LiveData<List<Event>> {

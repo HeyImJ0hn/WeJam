@@ -40,7 +40,7 @@ class NearbyFragment : Fragment() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "Map"
-                else -> "List"
+                else -> "Nearby"
             }
         }.attach()
     }

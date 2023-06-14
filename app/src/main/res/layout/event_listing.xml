@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="event"
+            type="dam.a47471.wejam.model.Event" />
+    </data>
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/relativeLayoutBackground"
         android:layout_width="match_parent"
@@ -18,7 +24,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             app:cardCornerRadius="24dp"
-            app:cardElevation="6dp"
+            app:cardElevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -67,13 +73,14 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/eventName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/roboto_medium"
-                        android:text="Event Name"
+                        android:text="@{event.name}"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        tools:text="Event Name" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/eventType"
