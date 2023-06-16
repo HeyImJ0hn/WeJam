@@ -69,19 +69,17 @@ class ListFragment : Fragment() {
 
         binding.jamBtn.isChecked = true
 
+        binding.searchBar.clearFocus()
+
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchBar.clearFocus()
-                events.forEach {
-                    if (it.name.contains(query.toString())) {
-                        (binding.nearbyListRecyclerView.adapter as EventListAdapter).filterName(query.toString())
-                    }
-                }
+                (binding.nearbyListRecyclerView.adapter as EventListAdapter).filterName(query.orEmpty())
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                (binding.nearbyListRecyclerView.adapter as EventListAdapter).filterName(newText.toString())
+                (binding.nearbyListRecyclerView.adapter as EventListAdapter).filterName(newText.orEmpty())
                 return false
             }
         })

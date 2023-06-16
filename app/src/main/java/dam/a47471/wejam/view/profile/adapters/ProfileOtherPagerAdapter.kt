@@ -8,7 +8,10 @@ import dam.a47471.wejam.view.profile.tabs.AboutFragment
 import dam.a47471.wejam.view.profile.tabs.EventsFragment
 import dam.a47471.wejam.view.profile.tabs.MediaFragment
 
-class ProfilePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
+class ProfileOtherPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
+
+    var aboutFragment = AboutFragment()
+    var eventsFragment = EventsFragment()
 
     override fun getItemCount(): Int {
         return 2
@@ -16,8 +19,8 @@ class ProfilePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) : FragmentS
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> AboutFragment()
-            else -> EventsFragment()
+            0 -> aboutFragment
+            else -> eventsFragment
         }
     }
 }

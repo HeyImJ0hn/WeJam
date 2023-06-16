@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.home.tabs.AttendingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchBarContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/searchCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="1dp"
+            app:cardCornerRadius="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <SearchView
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/attendingRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBarContainer"
+        tools:listitem="@layout/item_listing_event" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

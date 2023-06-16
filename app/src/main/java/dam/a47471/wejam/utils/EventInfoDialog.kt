@@ -105,7 +105,7 @@ class EventInfoDialog : BottomSheetDialogFragment() {
                 .setEnterAnim(R.anim.slide_in_right).setExitAnim(R.anim.slide_out_left).build()
             ProfileOtherFragment().arguments = bundle
             findNavController().navigate(
-                R.id.action_nearbyFragment_to_profileOtherFragment,
+                R.id.profileOtherFragment,
                 bundle,
                 navOptions
             )

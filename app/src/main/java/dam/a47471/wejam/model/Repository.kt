@@ -202,6 +202,82 @@ class Repository {
         return eventLiveData
     }
 
+    fun getEventsByAttendee(attendee: String): LiveData<List<Event>> {
+        val eventsLiveData = MutableLiveData<List<Event>>()
+
+        firestore.collection("events").whereArrayContains("attendees", attendee)
+            .get().addOnSuccessListener { querySnapshot: QuerySnapshot ->
+            val events = mutableListOf<Event>()
+            for (document in querySnapshot.documents) {
+                val owner = document.getString("owner")!!
+                val name = document.getString("name")!!
+                val type = document.getString("type")!!
+                val locationName = document.getString("locationName")!!
+                val lat = document.getDouble("lat")!!
+                val long = document.getDouble("long")!!
+                val time = document.getString("time")!!
+                val date = document.getString("date")!!
+                val attendees = document.get("attendees")!!
+
+                events.add(
+                    Event(
+                        owner,
+                        name,
+                        EventType.valueOf(type),
+                        locationName,
+                        lat,
+                        long,
+                        time,
+                        date,
+                        attendees as MutableList<String>
+                    )
+                )
+            }
+            eventsLiveData.value = events
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Error getting documents: ", exception)
+        }
+        return eventsLiveData
+    }
+
+    fun getEventsByOwner(userId: String): LiveData<List<Event>> {
+        val eventsLiveData = MutableLiveData<List<Event>>()
+
+        firestore.collection("events").whereEqualTo("owner", userId)
+            .get().addOnSuccessListener { querySnapshot: QuerySnapshot ->
+                val events = mutableListOf<Event>()
+                for (document in querySnapshot.documents) {
+                    val owner = document.getString("owner")!!
+                    val name = document.getString("name")!!
+                    val type = document.getString("type")!!
+                    val locationName = document.getString("locationName")!!
+                    val lat = document.getDouble("lat")!!
+                    val long = document.getDouble("long")!!
+                    val time = document.getString("time")!!
+                    val date = document.getString("date")!!
+                    val attendees = document.get("attendees")!!
+
+                    events.add(
+                        Event(
+                            owner,
+                            name,
+                            EventType.valueOf(type),
+                            locationName,
+                            lat,
+                            long,
+                            time,
+                            date,
+                            attendees as MutableList<String>
+                        )
+                    )
+                }
+                eventsLiveData.value = events
+            }.addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
+        return eventsLiveData
+    }
+
     fun addAttendee(event: Event, userId: String) {
         val eventName = event.name
 

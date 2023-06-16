@@ -1,26 +1,28 @@
 package dam.a47471.wejam.view.profile
 
 import android.os.Bundle
-import android.provider.ContactsContract.Profile
 import android.view.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.tabs.TabLayoutMediator
 import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.databinding.FragmentProfileOtherBinding
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.User
 import dam.a47471.wejam.utils.EventInfoDialog
+import dam.a47471.wejam.view.profile.adapters.ProfileOtherPagerAdapter
 import dam.a47471.wejam.view.profile.tabs.AboutFragment
-import dam.a47471.wejam.viewmodel.profile.EditProfileViewModel
+import dam.a47471.wejam.view.profile.tabs.EventsFragment
 import dam.a47471.wejam.viewmodel.profile.ProfileViewModel
 
 
@@ -31,6 +33,7 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
     private lateinit var activity: InternalActivity
     private lateinit var user: User
     private var event: Event? = null
+    private var adapter: ProfileOtherPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,13 +56,15 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         activity.setSupportActionBar(binding.toolbar)
 
-        if (arguments != null) {
-            user = arguments!!.getParcelable("user")!!
-            bindUser(user)
+        adapter = ProfileOtherPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        binding.viewPager.adapter = adapter!!
 
-            if (arguments!!.getParcelable<Event>("event") != null)
-                event = arguments!!.getParcelable("event")!!
-        }
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "About"
+                else -> "Events"
+            }
+        }.attach()
 
         binding.toolbar.title = ""
         activity.binding.bottomNav.visibility = View.GONE
@@ -71,6 +76,14 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
                     backAction()
                 }
             })
+
+        if (arguments != null) {
+            user = arguments!!.getParcelable("user")!!
+            bindUser(user)
+
+            if (arguments!!.getParcelable<Event>("event") != null)
+                event = arguments!!.getParcelable("event")!!
+        }
 
     }
 
@@ -116,10 +129,16 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
         if (user.banner != "")
             Glide.with(requireContext()).load(user.banner).into(binding.banner)
 
-        val currentFragment =
-            requireActivity().supportFragmentManager.findFragmentByTag("f${binding.viewPager.currentItem}")
+        val aFragment = AboutFragment()
+        aFragment.arguments = bundleOf().apply {
+            putString("bio", user.bio)
+        }
+        adapter!!.aboutFragment = aFragment
 
-        if (currentFragment is AboutFragment)
-            currentFragment.binding.bio.text = user.bio
+        val eFragment = EventsFragment()
+        eFragment.arguments = bundleOf().apply {
+            putString("userId", user.userId)
+        }
+        adapter!!.eventsFragment = eFragment
     }
 }

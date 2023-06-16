@@ -60,7 +60,6 @@ class ProfileFragment : Fragment() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "About"
-                1 -> "Media"
                 else -> "Events"
             }
         }.attach()

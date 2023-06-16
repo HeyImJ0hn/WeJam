@@ -52,6 +52,8 @@ class SearchUserFragment : Fragment() {
         }, requireContext())
         binding.recyclerView.adapter = adapter
 
+        binding.searchBar.clearFocus()
+
         viewModel.searchResults.observe(viewLifecycleOwner) {users ->
             adapter?.updateUserList(users ?: emptyList())
         }

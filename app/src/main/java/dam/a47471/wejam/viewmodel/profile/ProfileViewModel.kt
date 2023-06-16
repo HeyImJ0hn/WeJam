@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
+import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.Repository
 import dam.a47471.wejam.model.User
 
@@ -23,6 +24,10 @@ class ProfileViewModel : ViewModel() {
 
     fun getUserPicture(id: String): Task<Uri> {
         return repository.getProfilePicture(id)
+    }
+
+    fun getEventsByOwner(userId: String): LiveData<List<Event>> {
+        return repository.getEventsByOwner(userId)
     }
 
 }
