@@ -45,7 +45,7 @@
 
     <fragment
         android:id="@+id/nearbyFragment"
-        android:name="dam.a47471.wejam.view.nearby.NearbyFragment"
+        android:name="dam.a47471.wejam.view.explore.NearbyFragment"
         android:label="Nearby"
         tools:layout="@layout/fragment_nearby">
         <action
@@ -54,6 +54,48 @@
         <action
             android:id="@+id/action_nearbyFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_nearbyFragment_to_profileOtherFragment"
+            app:destination="@id/profileOtherFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/profileOtherFragment"
+        android:name="dam.a47471.wejam.view.profile.ProfileOtherFragment"
+        android:label="ProfileOther"
+        tools:layout="@layout/fragment_profile_other">
+        <action
+            android:id="@+id/action_profileOtherFragment_to_nearbyFragment"
+            app:destination="@id/nearbyFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_profileOtherFragment_to_searchUsersFragment"
+            app:destination="@id/searchUsersFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchUsersFragment"
+        android:name="dam.a47471.wejam.view.searchuser.SearchUserFragment"
+        android:label="SearchUsers"
+        tools:layout="@layout/fragment_search_user">>
+        <action
+            android:id="@+id/action_searchUsersFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_searchUsersFragment_to_nearbyFragment"
+            app:destination="@id/nearbyFragment" />
+        <action
+            android:id="@+id/action_searchUsersFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_searchUsersFragment_to_profileOtherFragment"
+            app:destination="@id/profileOtherFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+    </fragment>
 </navigation>

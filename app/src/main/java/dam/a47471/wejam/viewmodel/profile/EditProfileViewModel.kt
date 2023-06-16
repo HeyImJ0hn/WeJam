@@ -69,7 +69,7 @@ class EditProfileViewModel : ViewModel() {
     }
 
     fun loadUser(userId: String) {
-        repository.getUser(userId) { user ->
+        repository.loadUser(userId) { user ->
             _user.value = user
         }
     }

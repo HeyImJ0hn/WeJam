@@ -1,4 +1,4 @@
-package dam.a47471.wejam.viewmodel.nearby
+package dam.a47471.wejam.viewmodel.explore
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -9,7 +9,6 @@ import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.EventType
 import dam.a47471.wejam.model.Repository
 import dam.a47471.wejam.model.User
-import kotlin.math.*
 
 class NearbyViewModel : ViewModel() {
 
@@ -19,8 +18,18 @@ class NearbyViewModel : ViewModel() {
     val user: LiveData<User>
         get() = _user
 
-    fun createEvent(owner: String, name: String, type: EventType, location: String, lat: Double, long: Double, time: String, date: String) {
-        val event = Event(owner, name, type, location, lat, long, time, date)
+    fun createEvent(
+        owner: String,
+        name: String,
+        type: EventType,
+        location: String,
+        lat: Double,
+        long: Double,
+        time: String,
+        date: String,
+        attendees: MutableList<String> = mutableListOf()
+    ) {
+        val event = Event(owner, name, type, location, lat, long, time, date, attendees)
         repository.createEvent(event)
     }
 
@@ -28,22 +37,34 @@ class NearbyViewModel : ViewModel() {
         return repository.getEvents()
     }
 
-    fun getUserFromId(id: String): LiveData<User> {
-        return repository.getUserFromId(id)
-    }
-
     fun getUserPicture(id: String): Task<Uri> {
         return repository.getProfilePicture(id)
     }
 
     fun loadUser(userId: String) {
-        repository.getUser(userId) { user ->
+        repository.loadUser(userId) { user ->
             _user.value = user
         }
     }
 
     fun updateLocation(userId: String, lat: Double, long: Double) {
         repository.updateLocation(userId, lat, long)
+    }
+
+    fun getEventByName(name: String): LiveData<Event> {
+        return repository.getEventByName(name)
+    }
+
+    fun addAttendee(event: Event, userId: String) {
+        repository.addAttendee(event, userId)
+    }
+
+    fun removeAttendee(event: Event, userId: String) {
+        repository.removeAttendee(event, userId)
+    }
+
+    fun deleteEvent(event: Event): Boolean {
+        return repository.deleteEvent(event)
     }
 
 }

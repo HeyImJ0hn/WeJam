@@ -1,7 +1,6 @@
-package dam.a47471.wejam.view.nearby
+package dam.a47471.wejam.view.explore.dialogs
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.graphics.Color
@@ -11,34 +10,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.libraries.places.api.Places
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.google.api.Context
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import dam.a47471.wejam.BuildConfig
-import dam.a47471.wejam.databinding.NearbyCreateEventDialogBinding
-import dam.a47471.wejam.databinding.ProfileSettingsDialogBinding
+import dam.a47471.wejam.databinding.DialogNearbyCreateEventBinding
 import dam.a47471.wejam.model.EventType
-import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
-import dam.a47471.wejam.viewmodel.profile.SettingsDialogViewModel
+import dam.a47471.wejam.view.explore.tabs.MapFragment
+import dam.a47471.wejam.viewmodel.explore.NearbyViewModel
 
 class CreateEventDialog : BottomSheetDialogFragment() {
 
-    private lateinit var binding: NearbyCreateEventDialogBinding
+    private lateinit var binding: DialogNearbyCreateEventBinding
     private lateinit var viewModel: NearbyViewModel
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
@@ -69,7 +63,7 @@ class CreateEventDialog : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[NearbyViewModel::class.java]
-        binding = NearbyCreateEventDialogBinding.inflate(inflater, container, false)
+        binding = DialogNearbyCreateEventBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -189,13 +183,24 @@ class CreateEventDialog : BottomSheetDialogFragment() {
                 latitude,
                 longitude,
                 binding.timeEditText.text.toString(),
-                binding.dateEditText.text.toString()
+                binding.dateEditText.text.toString(),
+                mutableListOf(Firebase.auth.currentUser!!.uid)
             )
             Toast.makeText(
                 requireContext(),
-                "Created event: ${binding.eventNameEditText.text.toString()}.",
+                "Created event: ${binding.eventNameEditText.text.toString()}",
                 Toast.LENGTH_SHORT
             ).show()
+
+            parentFragmentManager.fragments.forEach {
+                if (it is MapFragment) {
+                    it.refreshMap()
+                    it.googleMap.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 17.0f)
+                    )
+                }
+            }
+
             dismiss()
         }
 

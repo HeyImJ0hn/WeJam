@@ -26,7 +26,7 @@ class SignUpViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
-                    Repository().writeNewUser(user!!.uid, name, "", email, "", Uri.EMPTY.toString())
+                    Repository().writeNewUser(user!!.uid, name, "", email, "", Uri.EMPTY.toString(), Uri.EMPTY.toString())
                     _isRegistrationSuccessful.value = true
                 } else {
                     _isRegistrationSuccessful.value = false

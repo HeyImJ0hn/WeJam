@@ -1,4 +1,4 @@
-package dam.a47471.wejam.view.nearby.tabs
+package dam.a47471.wejam.view.explore.tabs
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,18 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
-import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
-import dam.a47471.wejam.activities.MainActivity
 import dam.a47471.wejam.databinding.FragmentNearbyListBinding
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.EventType
 import dam.a47471.wejam.model.User
-import dam.a47471.wejam.view.nearby.EventInfoDialog
-import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
+import dam.a47471.wejam.utils.EventInfoDialog
+import dam.a47471.wejam.view.explore.adapters.EventListAdapter
+import dam.a47471.wejam.viewmodel.explore.NearbyViewModel
 
 class ListFragment : Fragment() {
 

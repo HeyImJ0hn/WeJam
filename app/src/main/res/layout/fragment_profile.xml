@@ -54,32 +54,24 @@
                     app:layout_constraintTop_toBottomOf="@id/divider">
 
                     <androidx.appcompat.widget.AppCompatButton
+                        style="@style/GeneralButton"
                         android:id="@+id/editBtn"
                         android:layout_width="150dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/button_gradient"
                         android:drawableStart="@drawable/ic_outline_edit_24"
                         android:drawablePadding="-20dp"
-                        android:fontFamily="@font/roboto_medium"
                         android:paddingStart="30dp"
                         android:paddingEnd="10dp"
-                        android:text="@string/edit"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:text="@string/edit" />
 
                     <androidx.appcompat.widget.AppCompatButton
+                        style="@style/OutlineButton"
                         android:id="@+id/settingsBtn"
                         android:layout_width="150dp"
-                        android:layout_height="40dp"
                         android:layout_marginStart="20dp"
-                        android:background="@drawable/button_gradient_outline"
                         android:drawableStart="@drawable/ic_outline_settings_24"
-                        android:fontFamily="@font/roboto_medium"
                         android:paddingStart="20dp"
                         android:paddingEnd="10dp"
-                        android:text="@string/settings"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:text="@string/settings" />
 
                 </LinearLayout>
 

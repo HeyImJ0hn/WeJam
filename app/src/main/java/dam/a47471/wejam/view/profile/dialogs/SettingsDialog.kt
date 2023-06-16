@@ -1,4 +1,4 @@
-package dam.a47471.wejam.view.profile
+package dam.a47471.wejam.view.profile.dialogs
 
 import android.app.Dialog
 import android.graphics.Color
@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dam.a47471.wejam.databinding.ProfileSettingsDialogBinding
+import dam.a47471.wejam.databinding.DialogProfileSettingsBinding
 import dam.a47471.wejam.viewmodel.profile.SettingsDialogViewModel
 
 class SettingsDialog : BottomSheetDialogFragment() {
 
-    private lateinit var binding: ProfileSettingsDialogBinding
+    private lateinit var binding: DialogProfileSettingsBinding
     private lateinit var viewModel: SettingsDialogViewModel
 
     override fun onCreateView(
@@ -23,7 +23,7 @@ class SettingsDialog : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[SettingsDialogViewModel::class.java]
-        binding = ProfileSettingsDialogBinding.inflate(inflater, container, false)
+        binding = DialogProfileSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 

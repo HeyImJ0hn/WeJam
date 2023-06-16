@@ -77,22 +77,20 @@ class InternalActivity : AppCompatActivity() {
 
         _loadingDialog = LoadingDialog(this)
 
-
-
         _binding.bottomNav.selectedItemId = R.id.bottom_profile
         _binding.bottomNav.itemIconTintList = null
         _binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.bottom_home -> {
+                R.id.bottom_events -> {
                     navController.navigate(R.id.homeFragment)
                     true
                 }
-                R.id.bottom_search -> {
+                R.id.bottom_explore -> {
                     navController.navigate(R.id.nearbyFragment)
                     true
                 }
-                R.id.bottom_learn -> {
-                    //navController.navigate(R.id.profileFragment)
+                R.id.bottom_search_user -> {
+                    navController.navigate(R.id.searchUsersFragment)
                     true
                 }
                 R.id.bottom_inbox -> {
@@ -164,44 +162,5 @@ class InternalActivity : AppCompatActivity() {
             matrix, false
         )
     }
-
-    fun resizeImage(uri: Uri, context: Context, targetWidth: Int, targetHeight: Int): Bitmap? {
-        try {
-            // Load a smaller version of the image into memory
-            val options = BitmapFactory.Options().apply {
-                inJustDecodeBounds = true
-                inSampleSize = calculateInSampleSize(this, targetWidth, targetHeight)
-                inJustDecodeBounds = false
-            }
-
-            // Decode the image with the specified sample size
-            val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r")
-            val bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor?.fileDescriptor, null, options)
-
-            parcelFileDescriptor?.close()
-            // Scale the bitmap to the specified width and height
-            return Bitmap.createScaledBitmap(bitmap!!, targetWidth, targetHeight, false)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return null
-        }
-    }
-
-    // Calculate the sample size for scaling the bitmap to the target size
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        val height = options.outHeight
-        val width = options.outWidth
-        var inSampleSize = 1
-
-        if (height > reqHeight || width > reqWidth) {
-            val heightRatio = (height.toFloat() / reqHeight.toFloat()).roundToInt()
-            val widthRatio = (width.toFloat() / reqWidth.toFloat()).roundToInt()
-            inSampleSize = if (heightRatio < widthRatio) heightRatio else widthRatio
-        }
-
-        return inSampleSize
-    }
-
-
 
 }

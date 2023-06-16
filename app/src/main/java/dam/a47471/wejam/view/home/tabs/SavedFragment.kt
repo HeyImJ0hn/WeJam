@@ -6,18 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dam.a47471.wejam.R
-import dam.a47471.wejam.databinding.FragmentHomePopularBinding
 
-class PopularFragment : Fragment() {
+class SavedFragment : Fragment() {
 
-    private lateinit var binding: FragmentHomePopularBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentHomePopularBinding.inflate(inflater, container, false)
-        return binding.root
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home_saved, container, false)
     }
 
 }

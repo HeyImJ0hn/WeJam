@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="event"
             type="dam.a47471.wejam.model.Event" />
@@ -172,6 +171,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/organizerCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -197,8 +197,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:padding="0dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/img_event_ph" />
+                            android:scaleType="centerCrop" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -278,19 +277,36 @@
 
             </androidx.cardview.widget.CardView>
 
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/joinBtn"
+                style="@style/GeneralButton"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
                 android:layout_marginStart="60dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="60dp"
-                android:background="@drawable/button_gradient"
-                android:fontFamily="@font/roboto_medium"
-                android:text="I'm in!"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:text="@string/i_m_in" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/leaveBtn"
+                style="@style/OutlineButton"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="60dp"
+                android:text="@string/leave_event" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/deleteBtn"
+                style="@style/GeneralButton"
+                android:backgroundTint="#E42E2E"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="60dp"
+                android:text="@string/delete_event" />
 
         </LinearLayout>
 

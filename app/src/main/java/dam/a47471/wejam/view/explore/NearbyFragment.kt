@@ -1,4 +1,4 @@
-package dam.a47471.wejam.view.nearby
+package dam.a47471.wejam.view.explore
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -6,16 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayoutMediator
 import dam.a47471.wejam.databinding.FragmentNearbyBinding
-import dam.a47471.wejam.view.nearby.tabs.NearbyPagerAdapter
-import dam.a47471.wejam.viewmodel.nearby.NearbyViewModel
+import dam.a47471.wejam.view.explore.adapters.NearbyPagerAdapter
+import dam.a47471.wejam.viewmodel.explore.NearbyViewModel
 
 class NearbyFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package dam.a47471.wejam.view.nearby.tabs
+package dam.a47471.wejam.view.explore.adapters
 
 import android.content.Context
 import android.graphics.Color
@@ -7,12 +7,12 @@ import android.graphics.Shader
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import dam.a47471.wejam.R
-import dam.a47471.wejam.databinding.EventListingBinding
+import dam.a47471.wejam.databinding.ItemListingEventBinding
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.EventType
+import dam.a47471.wejam.utils.Utils
 import dam_a47471.pokedex.ui.events.OnItemClickedListener
 import kotlin.math.*
 
@@ -34,9 +34,8 @@ class EventListAdapter(
     private var long: Double = 0.0
     private var maxDistance: Double = 50.0
 
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = EventListingBinding.bind(itemView)
+        private val binding = ItemListingEventBinding.bind(itemView)
 
         fun bindView(eventListing: Event, itemClickedListener: OnItemClickedListener?) {
             binding.event = eventListing
@@ -62,7 +61,7 @@ class EventListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.event_listing, parent, false)
+        val view = inflater.inflate(R.layout.item_listing_event, parent, false)
         return ViewHolder(view)
     }
 
@@ -94,6 +93,9 @@ class EventListAdapter(
 
     private fun applyFilters() {
         filteredEventList = originalEventList.filter { event ->
+            if (Utils.isCurrentDateAfter(event.date))
+                return@filter false
+
             var include = true
 
             // Apply name filter

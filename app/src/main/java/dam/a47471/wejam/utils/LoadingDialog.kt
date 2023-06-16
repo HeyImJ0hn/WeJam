@@ -10,7 +10,7 @@ class LoadingDialog(context: Context) {
     private val dialog = Dialog(context)
 
     fun show() {
-        dialog.setContentView(R.layout.loading_dialog)
+        dialog.setContentView(R.layout.dialog_loading)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
         dialog.show()
