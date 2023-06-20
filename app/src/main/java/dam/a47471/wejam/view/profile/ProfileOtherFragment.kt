@@ -1,7 +1,10 @@
 package dam.a47471.wejam.view.profile
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
@@ -14,6 +17,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.databinding.FragmentProfileOtherBinding
@@ -32,6 +37,7 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentProfileOtherBinding
     private lateinit var activity: InternalActivity
     private lateinit var user: User
+    private lateinit var friends: List<String>
     private var event: Event? = null
     private var adapter: ProfileOtherPagerAdapter? = null
 
@@ -85,6 +91,99 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
                 event = arguments!!.getParcelable("event")!!
         }
 
+        viewModel.loadFriends()
+        viewModel.loadFriendRequests(Firebase.auth.currentUser!!.uid)
+
+        viewModel.friends.observe(viewLifecycleOwner) { list ->
+            if (list.contains(user.userId!!)) {
+                binding.friendBtn.visibility = View.GONE
+                binding.removeBtn.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.friendRequests.observe(viewLifecycleOwner) { list ->
+            if (list.contains(user.userId!!)) {
+                binding.friendBtn.visibility = View.GONE
+                binding.messageBtn.visibility = View.GONE
+                binding.acceptFriendBtn.visibility = View.VISIBLE
+                binding.denyBtn.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.loadFriendRequests(user.userId!!)
+        viewModel.friendRequests.observe(viewLifecycleOwner) { list ->
+            if (list.contains(Firebase.auth.currentUser!!.uid)) {
+                binding.friendBtn.visibility = View.GONE
+                binding.requestedBtn.visibility = View.VISIBLE
+            }
+        }
+
+        binding.requestedBtn.setOnClickListener {
+            viewModel.removeFriendRequest(user.userId!!)
+            Toast.makeText(
+                requireContext(),
+                "Cancelled request",
+                Toast.LENGTH_SHORT
+            ).show()
+            binding.requestedBtn.visibility = View.GONE
+            binding.friendBtn.visibility = View.VISIBLE
+        }
+
+        binding.friendBtn.setOnClickListener {
+            viewModel.sendFriendRequest(user.userId!!)
+            Toast.makeText(
+                requireContext(),
+                "Friend request sent to ${user.username}",
+                Toast.LENGTH_SHORT
+            ).show()
+            binding.friendBtn.visibility = View.GONE
+            binding.requestedBtn.visibility = View.VISIBLE
+        }
+
+        binding.acceptFriendBtn.setOnClickListener {
+            viewModel.acceptFriendRequest(user.userId!!)
+            Toast.makeText(
+                requireContext(),
+                "Accepted friend request",
+                Toast.LENGTH_SHORT
+            ).show()
+            binding.acceptFriendBtn.visibility = View.GONE
+            binding.removeBtn.visibility = View.VISIBLE
+        }
+
+        binding.removeBtn.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Remove friend")
+                .setMessage("Are you sure you want to remove ${user.username} from your friends?")
+                .setPositiveButton("Yes") { _, _ ->
+                    viewModel.removeFriend(user.userId!!)
+                    binding.removeBtn.visibility = View.GONE
+                    binding.friendBtn.visibility = View.VISIBLE
+                    Toast.makeText(
+                        requireContext(),
+                        "Removed friend",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding.removeBtn.visibility = View.GONE
+                    binding.friendBtn.visibility = View.VISIBLE
+                }
+                .setNegativeButton("No") { _, _ -> }
+                .show()
+        }
+
+        binding.denyBtn.setOnClickListener {
+            viewModel.removeFriendRequest(user.userId!!)
+            Toast.makeText(
+                requireContext(),
+                "Denied friend request",
+                Toast.LENGTH_SHORT
+            ).show()
+            binding.denyBtn.visibility = View.GONE
+            binding.messageBtn.visibility = View.VISIBLE
+            binding.acceptFriendBtn.visibility = View.GONE
+            binding.friendBtn.visibility = View.VISIBLE
+        }
+
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -124,6 +223,13 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
             Glide.with(requireContext())
                 .load(it)
                 .into(binding.profileImage)
+        }.addOnFailureListener {
+            println("Error loading user picture, replacing with default")
+            viewModel.getDefaultAvatar().addOnSuccessListener {
+                Glide.with(requireContext())
+                    .load(it)
+                    .into(binding.profileImage)
+            }
         }
 
         if (user.banner != "")

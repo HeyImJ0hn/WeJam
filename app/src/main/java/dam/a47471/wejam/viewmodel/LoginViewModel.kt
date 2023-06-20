@@ -17,6 +17,11 @@ class LoginViewModel : ViewModel() {
     fun loginUser(email: String, password: String) {
         val firebaseAuth = FirebaseAuth.getInstance()
 
+        if (email.isEmpty() || password.isEmpty()) {
+            _isLoginSuccessful.value = false
+            return
+        }
+
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "signInWithEmail:success")

@@ -94,7 +94,7 @@ class InternalActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bottom_inbox -> {
-                    //navController.navigate(R.id.profileFragment)
+                    navController.navigate(R.id.inboxFragment)
                     true
                 }
                 R.id.bottom_profile -> {
@@ -107,6 +107,10 @@ class InternalActivity : AppCompatActivity() {
 
         /*navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
+                R.id.homeFragment -> binding.bottomNav.selectedItemId = R.id.bottom_events
+                R.id.nearbyFragment -> binding.bottomNav.selectedItemId = R.id.bottom_explore
+                R.id.searchUsersFragment -> binding.bottomNav.selectedItemId = R.id.bottom_search_user
+                R.id.inboxFragment -> binding.bottomNav.selectedItemId = R.id.bottom_inbox
                 R.id.profileFragment -> binding.bottomNav.selectedItemId = R.id.bottom_profile
             }
         }*/

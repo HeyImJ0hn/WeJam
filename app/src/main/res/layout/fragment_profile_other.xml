@@ -96,6 +96,29 @@
                             android:text="@string/friend" />
 
                         <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/requestedBtn"
+                            style="@style/GeneralButton"
+                            android:visibility="gone"
+                            android:layout_width="150dp"
+                            android:drawableStart="@drawable/ic_outline_access_time_24"
+                            android:drawableTint="@color/white"
+                            android:drawablePadding="0dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/requested" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/acceptFriendBtn"
+                            style="@style/GeneralButton"
+                            android:visibility="gone"
+                            android:layout_width="150dp"
+                            android:drawableStart="@drawable/ic_outline_person_add_24"
+                            android:drawablePadding="-10dp"
+                            android:paddingStart="30dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/accept" />
+
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/removeBtn"
                             style="@style/GeneralButton"
                             android:visibility="gone"
@@ -107,8 +130,22 @@
                             android:text="@string/remove" />
 
                         <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/settingsBtn"
+                            android:id="@+id/denyBtn"
                             style="@style/OutlineButton"
+                            android:visibility="gone"
+                            android:layout_width="150dp"
+                            android:layout_marginStart="20dp"
+                            android:drawableStart="@drawable/ic_outline_person_remove_24"
+                            android:drawableTint="@color/black"
+                            android:drawablePadding="-20dp"
+                            android:paddingStart="35dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/deny" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/messageBtn"
+                            style="@style/OutlineButton"
+                            android:visibility="visible"
                             android:layout_width="150dp"
                             android:layout_marginStart="20dp"
                             android:drawableStart="@drawable/ic_outline_textsms_24"

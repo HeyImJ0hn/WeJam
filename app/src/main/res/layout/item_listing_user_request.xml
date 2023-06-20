@@ -5,25 +5,25 @@
 
     <data>
         <variable
-            name="event"
-            type="dam.a47471.wejam.model.Event" />
+            name="user"
+            type="dam.a47471.wejam.model.User" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/relativeLayoutBackground"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="74dp"
         android:clickable="true"
         android:clipToPadding="true"
         android:focusable="true">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="60dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,68 +35,76 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/imageCardView"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     app:cardCornerRadius="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/picture"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/img_event_ph" />
+                        app:circleImage="@{user.profilePicture}"
+                        tools:src="@drawable/img_default_avatar"/>
 
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/imageCardView"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/date_time"
+                        android:id="@+id/username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_medium"
-                        android:text="Date • Time"
+                        android:text="@{user.username}"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:text="Username"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/eventName"
-                        android:layout_width="230dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:fontFamily="@font/roboto_medium"
-                        android:text="@{event.name}"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        tools:text="Event Name" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/eventType"
+                        android:id="@+id/realName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:fontFamily="@font/roboto_medium"
-                        android:text="Event Type" />
+                        android:text="@{user.realName}"
+                        tools:text="Real Name"/>
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/friendText"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/acceptBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:fontFamily="@font/roboto_medium"
-                        tools:text="Friend" />
+                        android:tint="@color/black"
+                        android:src="@drawable/ic_outline_person_add_24"
+                        android:layout_marginEnd="20dp"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/denyBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tint="@color/black"
+                        android:src="@drawable/ic_outline_person_remove_24"
+                        android:layout_marginEnd="20dp"/>
 
                 </LinearLayout>
 

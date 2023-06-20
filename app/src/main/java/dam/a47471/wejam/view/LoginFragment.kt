@@ -47,14 +47,14 @@ class LoginFragment : Fragment() {
             viewModel.loginUser(binding.emailInput.text.toString(), binding.passwordInput.text.toString())
         }
 
-        viewModel.isLoginSuccessful.observe(viewLifecycleOwner, Observer<Boolean> { isLoginSuccessful ->
+        viewModel.isLoginSuccessful.observe(viewLifecycleOwner) { isLoginSuccessful ->
             if (isLoginSuccessful) {
                 Toast.makeText(context, "Logged in: " + FirebaseAuth.getInstance().currentUser!!.displayName, Toast.LENGTH_SHORT).show()
             } else {
-                (activity as InternalActivity).loadingDialog.dismiss()
+                (activity as MainActivity).loadingDialog.dismiss()
                 Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
     override fun onDestroyView() {

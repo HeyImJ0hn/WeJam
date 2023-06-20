@@ -98,7 +98,6 @@ class EventInfoDialog : BottomSheetDialogFragment() {
         binding.organizerCard.setOnClickListener {
             val bundle = Bundle().apply {
                 putParcelable("user", organizer)
-                putString("back", "nearby")
                 putParcelable("event", event)
             }
             val navOptions = NavOptions.Builder().setPopUpTo(R.id.profileOtherFragment, false)
@@ -110,6 +109,22 @@ class EventInfoDialog : BottomSheetDialogFragment() {
                 navOptions
             )
             dismiss()
+        }
+
+        viewModel.getFavouriteEvents().observe(viewLifecycleOwner) {
+            binding.favouriteBtn.isChecked = it?.contains(event.name) == true
+        }
+
+        binding.favouriteBtn.setOnClickListener {
+            if (binding.favouriteBtn.isChecked) {
+                viewModel.favouriteEvent(event.name)
+                Toast.makeText(requireContext(), "Saved event ${event.name}", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                viewModel.unfavouriteEvent(event.name)
+                Toast.makeText(requireContext(), "Removed event from saved", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 

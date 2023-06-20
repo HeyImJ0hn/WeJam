@@ -30,13 +30,14 @@
 
         <TextView
             android:id="@+id/eventName"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/roboto_medium"
             android:text="@{event.name}"
             android:textColor="@color/black"
             android:textSize="20sp"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottomSheetGrapple"
@@ -309,6 +310,18 @@
                 android:text="@string/delete_event" />
 
         </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/favouriteBtn"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:background="@drawable/selector_favourite_bookmark"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:textOn=" "
+            android:textOff=" "
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottomSheetGrapple" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

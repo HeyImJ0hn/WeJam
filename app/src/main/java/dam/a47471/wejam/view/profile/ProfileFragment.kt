@@ -30,6 +30,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+        viewModel.loadUser(auth.currentUser!!.uid)
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,8 +39,6 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity = requireActivity() as InternalActivity
-
-        viewModel.loadUser(auth.currentUser!!.uid)
 
         binding.settingsBtn.setOnClickListener {
             SettingsDialog().show(parentFragmentManager, "Settings")

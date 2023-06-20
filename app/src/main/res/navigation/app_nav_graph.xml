@@ -14,7 +14,7 @@
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"/>
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_profileFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -30,7 +30,7 @@
             android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"/>
+            app:exitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -58,7 +58,7 @@
             android:id="@+id/action_nearbyFragment_to_profileOtherFragment"
             app:destination="@id/profileOtherFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"/>
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -70,19 +70,24 @@
             android:id="@+id/action_profileOtherFragment_to_nearbyFragment"
             app:destination="@id/nearbyFragment"
             app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"/>
+            app:exitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileOtherFragment_to_searchUsersFragment"
             app:destination="@id/searchUsersFragment"
             app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"/>
+            app:exitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileOtherFragment_to_inboxFragment"
+            app:destination="@id/inboxFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
         android:id="@+id/searchUsersFragment"
         android:name="dam.a47471.wejam.view.searchuser.SearchUserFragment"
         android:label="SearchUsers"
-        tools:layout="@layout/fragment_search_user">>
+        tools:layout="@layout/fragment_search_user">
         <action
             android:id="@+id/action_searchUsersFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -96,6 +101,18 @@
             android:id="@+id/action_searchUsersFragment_to_profileOtherFragment"
             app:destination="@id/profileOtherFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"/>
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/inboxFragment"
+        android:name="dam.a47471.wejam.view.inbox.InboxFragment"
+        android:label="InboxFragment"
+        tools:layout="@layout/fragment_inbox">
+        <action
+            android:id="@+id/action_inboxFragment_to_profileOtherFragment"
+            app:destination="@id/profileOtherFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right" />
     </fragment>
 </navigation>

@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize Firebase Auth
         auth = Firebase.auth
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val currentUser = firebaseAuth.currentUser
             if (currentUser != null) {
-                // User is signed in, start new activity
                 val intent = Intent(this, InternalActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -58,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         FirebaseAuth.getInstance().addAuthStateListener(authStateListener)
 
-        // Check if user is signed in (non-null) and update UI accordingly.
         /*val currentUser = auth.currentUser
         if (currentUser != null) {
             Toast.makeText(baseContext, "Automatically signed in", Toast.LENGTH_SHORT).show();

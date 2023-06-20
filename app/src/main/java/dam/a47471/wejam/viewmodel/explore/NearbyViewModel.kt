@@ -67,4 +67,16 @@ class NearbyViewModel : ViewModel() {
         return repository.deleteEvent(event)
     }
 
+    fun favouriteEvent(eventName: String) {
+        repository.favouriteEvent(eventName)
+    }
+
+    fun unfavouriteEvent(eventName: String) {
+        repository.unfavouriteEvent(eventName)
+    }
+
+    fun getFavouriteEvents(): LiveData<List<String>?> {
+        return repository.getFavouriteEvents()
+    }
+
 }

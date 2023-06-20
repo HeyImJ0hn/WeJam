@@ -13,6 +13,7 @@ import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.databinding.FragmentHomeAttendingBinding
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.utils.EventInfoDialog
+import dam.a47471.wejam.utils.Utils
 import dam.a47471.wejam.view.home.adapters.AttendingListAdapter
 import dam.a47471.wejam.viewmodel.home.HomeViewModel
 
@@ -35,14 +36,17 @@ class AttendingFragment : Fragment() {
 
         (requireActivity() as InternalActivity).loadingDialog.show()
 
-        viewModel.getEventsByAttendee(Firebase.auth.currentUser!!.uid).observe(viewLifecycleOwner) {
-            binding.attendingRecyclerView.adapter = AttendingListAdapter(it, itemClickedListener = {event ->
-                val dialog = EventInfoDialog()
-                dialog.setEvent(event as Event)
-                dialog.show(requireActivity().supportFragmentManager, "event_info_dialog")
-            }, requireContext())
-            (requireActivity() as InternalActivity).loadingDialog.dismiss()
-        }
+        viewModel.getEventsByAttendee(Firebase.auth.currentUser!!.uid)
+            .observe(viewLifecycleOwner) { events ->
+                binding.attendingRecyclerView.adapter = AttendingListAdapter(events.filter {
+                    !Utils.isCurrentDateAfter(it.date)
+                }, itemClickedListener = { event ->
+                    val dialog = EventInfoDialog()
+                    dialog.setEvent(event as Event)
+                    dialog.show(requireActivity().supportFragmentManager, "event_info_dialog")
+                }, requireContext())
+                (requireActivity() as InternalActivity).loadingDialog.dismiss()
+            }
 
         binding.searchBar.setOnClickListener {
             binding.searchBar.isIconified = false
