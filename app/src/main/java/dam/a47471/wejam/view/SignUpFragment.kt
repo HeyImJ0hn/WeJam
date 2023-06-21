@@ -13,18 +13,18 @@ import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.activities.MainActivity
 import dam.a47471.wejam.databinding.FragmentSignUpBinding
-import dam.a47471.wejam.viewmodel.SignUpViewModel
+import dam.a47471.wejam.viewmodel.LoginViewModel
 
 class SignUpFragment : Fragment() {
 
     private lateinit var binding: FragmentSignUpBinding
-    private lateinit var viewModel: SignUpViewModel
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
 
         return binding.root

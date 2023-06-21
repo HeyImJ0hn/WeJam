@@ -1,8 +1,6 @@
 package dam.a47471.wejam.view
 
 import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,14 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import dam.a47471.wejam.viewmodel.LoginViewModel
 import dam.a47471.wejam.R
-import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.activities.MainActivity
 import dam.a47471.wejam.databinding.FragmentLoginBinding
+import dam.a47471.wejam.viewmodel.LoginViewModel
 
 class LoginFragment : Fragment() {
 
@@ -54,6 +50,10 @@ class LoginFragment : Fragment() {
                 (activity as MainActivity).loadingDialog.dismiss()
                 Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.googleBtn.setOnClickListener {
+            (requireActivity() as MainActivity).oneTapSignIn()
         }
     }
 

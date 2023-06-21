@@ -1,7 +1,10 @@
 package dam.a47471.wejam.viewmodel.inbox
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dam.a47471.wejam.model.Chat
+import dam.a47471.wejam.model.Message
 import dam.a47471.wejam.model.Repository
 import dam.a47471.wejam.model.User
 
@@ -27,6 +30,14 @@ class InboxViewModel : ViewModel() {
         repository.loadUser(userId) { user ->
             _user.value = user
         }
+    }
+
+    fun getChat(userId: String, otherUserId: String): LiveData<Chat> {
+        return repository.getChat(userId, otherUserId)
+    }
+
+    fun sendMessage(userId: String, otherUserId: String, message: Message) {
+        repository.sendMessage(userId, otherUserId, message)
     }
 
 }

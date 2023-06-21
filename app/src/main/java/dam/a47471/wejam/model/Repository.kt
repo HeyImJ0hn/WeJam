@@ -19,6 +19,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import dam.a47471.wejam.utils.Utils
 import java.util.concurrent.CompletableFuture
 
 class Repository {
@@ -396,8 +397,8 @@ class Repository {
         }
     }
 
-    fun removeFriendRequest(friendId: String) {
-        val ref = database.child("friends").child("requests").child(Firebase.auth.currentUser!!.uid)
+    fun removeFriendRequest(userId: String, friendId: String) {
+        val ref = database.child("friends").child("requests").child(userId)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -416,8 +417,6 @@ class Repository {
     }
 
     fun acceptFriendRequest(friendId: String) {
-        val requestsRef =
-            database.child("friends").child("requests").child(Firebase.auth.currentUser!!.uid)
         var ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
         ref.push().setValue(friendId).addOnSuccessListener {
             Log.w(TAG, "Added to my friend list")
@@ -432,20 +431,7 @@ class Repository {
             Log.w(TAG, "Failed accepting friend request", exception)
         }
 
-        requestsRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (requestSnapshot in dataSnapshot.children) {
-                    val request = requestSnapshot.getValue(String::class.java)
-                    if (request == friendId) {
-                        requestSnapshot.ref.removeValue()
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to remove friend request: $databaseError")
-            }
-        })
+        removeFriendRequest(Firebase.auth.currentUser!!.uid, friendId)
     }
 
     fun getFriendList(callback: (List<String>) -> Unit) {
@@ -530,7 +516,8 @@ class Repository {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val fav = mutableListOf<String>()
-                val favourites = dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
+                val favourites =
+                    dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
                 favourites?.let { fav.addAll(it) }
 
                 fav.add(eventName)
@@ -555,7 +542,8 @@ class Repository {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val fav = mutableListOf<String>()
-                val favourites = dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
+                val favourites =
+                    dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
                 favourites?.let { fav.addAll(it) }
 
                 fav.remove(eventName)
@@ -581,7 +569,8 @@ class Repository {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val fav = mutableListOf<String>()
-                val favourites = dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
+                val favourites =
+                    dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
                 events.value = favourites
             }
 
@@ -590,6 +579,47 @@ class Repository {
             }
         })
         return events
+    }
+
+    fun getChat(userId: String, otherUserId: String): LiveData<Chat> {
+        val chatId = Utils.getChatId(userId, otherUserId)
+        val chatLiveData = MutableLiveData<Chat>()
+
+        val chatRef = firestore.collection("chats").document(chatId)
+
+        chatRef.addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e(TAG, "Failed to get chat: $error")
+                return@addSnapshotListener
+            }
+            if (value != null && value.exists()) {
+                val chat = value.toObject(Chat::class.java)
+                chatLiveData.value = chat!!
+            } else {
+                val newChat =
+                    Chat(chatId, mutableListOf(userId, otherUserId), mutableListOf(), "")
+                chatRef.set(newChat)
+                    .addOnSuccessListener {
+                        chatLiveData.value = newChat
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e(TAG, "Failed to create chat: $e")
+                    }
+            }
+        }
+        return chatLiveData
+    }
+
+    fun sendMessage(userId: String, otherUserId: String, message: Message) {
+        val chatId = Utils.getChatId(userId, otherUserId)
+        val chatRef = firestore.collection("chats").document(chatId)
+        chatRef.update("messages", FieldValue.arrayUnion(message))
+            .addOnSuccessListener {
+                Log.w(TAG, "Message sent")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to send message: $e")
+            }
     }
 
 }

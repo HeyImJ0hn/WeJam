@@ -16,5 +16,13 @@ class Utils {
         fun isAttendee(event: Event, userId: String): Boolean {
             return event.attendees.contains(userId)
         }
+
+        fun getChatId(userId1: String, userId2: String): String {
+            return if (userId1 < userId2) {
+                "$userId1-$userId2"
+            } else {
+                "$userId2-$userId1"
+            }
+        }
     }
 }

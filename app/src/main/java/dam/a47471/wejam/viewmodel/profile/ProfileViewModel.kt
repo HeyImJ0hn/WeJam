@@ -62,8 +62,8 @@ class ProfileViewModel : ViewModel() {
         repository.acceptFriendRequest(friendId)
     }
 
-    fun removeFriendRequest(friendId: String) {
-        repository.removeFriendRequest(friendId)
+    fun removeFriendRequest(userId: String, friendId: String) {
+        repository.removeFriendRequest(userId, friendId)
     }
 
     fun removeFriend(friendId: String) {

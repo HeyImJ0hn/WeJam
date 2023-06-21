@@ -77,7 +77,7 @@ class InternalActivity : AppCompatActivity() {
 
         _loadingDialog = LoadingDialog(this)
 
-        _binding.bottomNav.selectedItemId = R.id.bottom_profile
+        //_binding.bottomNav.selectedItemId = R.id.bottom_profile
         _binding.bottomNav.itemIconTintList = null
         _binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
@@ -104,16 +104,6 @@ class InternalActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-        /*navController.addOnDestinationChangedListener { _, destination, _ ->
-            when(destination.id) {
-                R.id.homeFragment -> binding.bottomNav.selectedItemId = R.id.bottom_events
-                R.id.nearbyFragment -> binding.bottomNav.selectedItemId = R.id.bottom_explore
-                R.id.searchUsersFragment -> binding.bottomNav.selectedItemId = R.id.bottom_search_user
-                R.id.inboxFragment -> binding.bottomNav.selectedItemId = R.id.bottom_inbox
-                R.id.profileFragment -> binding.bottomNav.selectedItemId = R.id.bottom_profile
-            }
-        }*/
 
         Places.initialize(this, BuildConfig.MAPS_API_KEY)
     }

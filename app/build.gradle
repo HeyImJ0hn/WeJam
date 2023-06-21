@@ -21,7 +21,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
-                "MAPS_API_KEY": MAPS_API_KEY
+                "MAPS_API_KEY": MAPS_API_KEY,
+                "WEB_CLIENT_ID": WEB_CLIENT_ID
         ]
     }
 
@@ -31,16 +32,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "MAPS_API_KEY", "\"$MAPS_API_KEY\""
             resValue "string", "maps_api_key", "\"$MAPS_API_KEY\""
+            buildConfigField "String", "WEB_CLIENT_ID", "\"$WEB_CLIENT_ID\""
+            resValue "string", "web_client_id", "\"$WEB_CLIENT_ID\""
         }
 
         debug {
             buildConfigField "String", "MAPS_API_KEY", "\"$MAPS_API_KEY\""
             resValue "string", "maps_api_key", "\"$MAPS_API_KEY\""
+            buildConfigField "String", "WEB_CLIENT_ID", "\"$WEB_CLIENT_ID\""
+            resValue "string", "web_client_id", "\"$WEB_CLIENT_ID\""
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -75,4 +80,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.15.0' // Glide
     implementation('com.google.android.gms:play-services-location:21.0.1') // Android GPS
     implementation 'com.google.android.libraries.places:places:3.1.0' // Places API
+    implementation 'com.google.android.gms:play-services-auth:20.5.0' // Google Sign In
 }

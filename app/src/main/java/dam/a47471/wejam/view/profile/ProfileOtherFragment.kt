@@ -25,9 +25,11 @@ import dam.a47471.wejam.databinding.FragmentProfileOtherBinding
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.User
 import dam.a47471.wejam.utils.EventInfoDialog
+import dam.a47471.wejam.view.inbox.ChatFragment
 import dam.a47471.wejam.view.profile.adapters.ProfileOtherPagerAdapter
 import dam.a47471.wejam.view.profile.tabs.AboutFragment
 import dam.a47471.wejam.view.profile.tabs.EventsFragment
+import dam.a47471.wejam.viewmodel.inbox.InboxViewModel
 import dam.a47471.wejam.viewmodel.profile.ProfileViewModel
 
 
@@ -40,6 +42,8 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
     private lateinit var friends: List<String>
     private var event: Event? = null
     private var adapter: ProfileOtherPagerAdapter? = null
+
+    private var toChat = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +123,7 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
         }
 
         binding.requestedBtn.setOnClickListener {
-            viewModel.removeFriendRequest(user.userId!!)
+            viewModel.removeFriendRequest(user.userId!!, Firebase.auth.currentUser!!.uid)
             Toast.makeText(
                 requireContext(),
                 "Cancelled request",
@@ -172,7 +176,7 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
         }
 
         binding.denyBtn.setOnClickListener {
-            viewModel.removeFriendRequest(user.userId!!)
+            viewModel.removeFriendRequest(Firebase.auth.currentUser!!.uid, user.userId!!)
             Toast.makeText(
                 requireContext(),
                 "Denied friend request",
@@ -182,6 +186,22 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
             binding.messageBtn.visibility = View.VISIBLE
             binding.acceptFriendBtn.visibility = View.GONE
             binding.friendBtn.visibility = View.VISIBLE
+        }
+
+        binding.messageBtn.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("user", user)
+                putString("previous", "profileOther")
+            }
+            toChat = true
+            val navOptions = NavOptions.Builder().setPopUpTo(R.id.chatFragment, false)
+                .setEnterAnim(R.anim.slide_in_right).setExitAnim(R.anim.slide_out_left).build()
+            ChatFragment().arguments = bundle
+            findNavController().navigate(
+                R.id.chatFragment,
+                bundle,
+                navOptions
+            )
         }
 
     }
@@ -201,10 +221,13 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
     }
 
     override fun onDestroyView() {
-        (activity as MenuHost).removeMenuProvider(this)
         super.onDestroyView()
         activity.loadingDialog.dismiss()
-        activity.binding.bottomNav.visibility = View.VISIBLE
+        if (!toChat) {
+            (activity as MenuHost).removeMenuProvider(this)
+            activity.binding.bottomNav.visibility = View.VISIBLE
+        }
+        toChat = false
     }
 
     private fun backAction() {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/profileFragment"
@@ -115,4 +115,10 @@
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="dam.a47471.wejam.view.inbox.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_inbox_chat"/>
 </navigation>

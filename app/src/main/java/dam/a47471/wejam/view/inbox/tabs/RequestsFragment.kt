@@ -22,6 +22,7 @@ class RequestsFragment : Fragment() {
 
     private lateinit var binding: FragmentInboxRequestsBinding
     private lateinit var viewModel: InboxViewModel
+    private lateinit var adapter: RequestListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +36,6 @@ class RequestsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         viewModel.friendRequests.observe(viewLifecycleOwner) { friendRequests ->
             if (friendRequests.isEmpty()) {
@@ -51,7 +51,7 @@ class RequestsFragment : Fragment() {
                     requests.add(user)
 
                     if (requests.size == friendRequests.size) {
-                        binding.recyclerView.adapter =
+                        adapter =
                             RequestListAdapter(requests, itemClickedListener = {
                                 val bundle = Bundle().apply {
                                     putParcelable("user", it as User)
@@ -67,6 +67,7 @@ class RequestsFragment : Fragment() {
                                     navOptions
                                 )
                             }, requireContext())
+                        binding.recyclerView.adapter = adapter
                     }
 
                 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
+import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.databinding.FragmentNearbyBinding
 import dam.a47471.wejam.view.explore.adapters.NearbyPagerAdapter
 import dam.a47471.wejam.viewmodel.explore.NearbyViewModel
