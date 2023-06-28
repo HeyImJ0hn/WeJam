@@ -35,6 +35,7 @@ class InboxFragment : Fragment() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "Messages"
+                1 -> "Friends"
                 else -> "Requests"
             }
         }.attach()

@@ -86,9 +86,10 @@ class EventInfoDialog : BottomSheetDialogFragment() {
             AlertDialog.Builder(requireContext())
                 .setMessage("Are you sure you want to delete this event?")
                 .setPositiveButton("Yes") { _, _ ->
+                    viewModel.deleteEvent(event)
                     Toast.makeText(
                         requireContext(),
-                        if (viewModel.deleteEvent(event)) "Deleted Event" else "Failed to delete event",
+                        "Deleted Event",
                         Toast.LENGTH_SHORT
                     ).show()
                     dismiss()

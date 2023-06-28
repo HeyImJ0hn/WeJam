@@ -18,6 +18,10 @@ class InboxViewModel : ViewModel() {
     val user: MutableLiveData<User>
         get() = _user
 
+    private val _friends = MutableLiveData<List<String>>()
+    val friends: LiveData<List<String>>
+        get() = _friends
+
     private val repository = Repository()
 
     fun loadFriendRequests(userId: String) {
@@ -38,6 +42,16 @@ class InboxViewModel : ViewModel() {
 
     fun sendMessage(userId: String, otherUserId: String, message: Message) {
         repository.sendMessage(userId, otherUserId, message)
+    }
+
+    fun getUserChats(userId: String): LiveData<List<Chat>> {
+        return repository.getUserChats(userId)
+    }
+
+    fun loadFriends() {
+        repository.getFriendList {
+            _friends.value = it
+        }
     }
 
 }

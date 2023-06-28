@@ -114,11 +114,31 @@
             app:destination="@id/profileOtherFragment"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_inboxFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/chatFragment"
         android:name="dam.a47471.wejam.view.inbox.ChatFragment"
         android:label="ChatFragment"
-        tools:layout="@layout/fragment_inbox_chat"/>
+        tools:layout="@layout/fragment_inbox_chat">
+        <action
+            android:id="@+id/action_chatFragment_to_profileOtherFragment"
+            app:destination="@id/profileOtherFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="dam.a47471.wejam.view.inbox.tabs.FriendsFragment"
+        android:label="FriendsFragment"
+        tools:layout="@layout/fragment_inbox_friends">
+        <action
+            android:id="@+id/action_friendsFragment_to_profileOtherFragment"
+            app:destination="@id/profileOtherFragment" />
+        <action
+            android:id="@+id/action_friendsFragment_to_inboxFragment"
+            app:destination="@id/inboxFragment" />
+    </fragment>
 </navigation>

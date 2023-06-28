@@ -6,15 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
-import dam.a47471.wejam.databinding.FragmentHomeFriendsBinding
 import dam.a47471.wejam.databinding.FragmentHomeSavedBinding
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.utils.EventInfoDialog
-import dam.a47471.wejam.utils.GeneralRecyclerViewAdapter
-import dam.a47471.wejam.utils.Utils
-import dam.a47471.wejam.view.home.adapters.FriendsEventListAdapter
+import dam.a47471.wejam.utils.GeneralEventRecyclerViewAdapter
 import dam.a47471.wejam.viewmodel.home.HomeViewModel
 
 class SavedFragment : Fragment() {
@@ -44,7 +40,7 @@ class SavedFragment : Fragment() {
                 viewModel.getEventByName(name).observe(viewLifecycleOwner) { event ->
                     saved.add(event)
                     if (saved.size == savedNames.size) {
-                        binding.recyclerView.adapter = GeneralRecyclerViewAdapter(saved, itemClickedListener = {
+                        binding.recyclerView.adapter = GeneralEventRecyclerViewAdapter(saved, itemClickedListener = {
                             val dialog = EventInfoDialog()
                             dialog.setEvent(it as Event)
                             dialog.show(

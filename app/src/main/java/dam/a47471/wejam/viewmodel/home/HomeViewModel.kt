@@ -54,7 +54,7 @@ class HomeViewModel : ViewModel() {
         repository.removeAttendee(event, userId)
     }
 
-    fun deleteEvent(event: Event): Boolean {
+    fun deleteEvent(event: Event) {
         return repository.deleteEvent(event)
     }
 

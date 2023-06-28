@@ -153,6 +153,8 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
             ).show()
             binding.acceptFriendBtn.visibility = View.GONE
             binding.removeBtn.visibility = View.VISIBLE
+            binding.denyBtn.visibility = View.GONE
+            binding.messageBtn.visibility = View.VISIBLE
         }
 
         binding.removeBtn.setOnClickListener {

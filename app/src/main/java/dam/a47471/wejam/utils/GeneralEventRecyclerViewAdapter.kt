@@ -13,11 +13,11 @@ import dam.a47471.wejam.databinding.ItemListingEventBinding
 import dam.a47471.wejam.model.Event
 import dam_a47471.pokedex.ui.events.OnItemClickedListener
 
-class GeneralRecyclerViewAdapter(
+class GeneralEventRecyclerViewAdapter(
     private val eventList: List<Event>,
     private val itemClickedListener: OnItemClickedListener? = null,
     private val context: Context
-) : RecyclerView.Adapter<GeneralRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<GeneralEventRecyclerViewAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemListingEventBinding.bind(itemView)

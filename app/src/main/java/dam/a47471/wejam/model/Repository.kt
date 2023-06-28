@@ -325,21 +325,18 @@ class Repository {
             }
     }
 
-    fun deleteEvent(event: Event): Boolean {
-        var deleted = false
+    fun deleteEvent(event: Event) {
         val eventName = event.name
 
         firestore.collection("events").whereEqualTo("name", eventName).get()
             .addOnSuccessListener { querySnapshot ->
                 val eventRef = querySnapshot.documents[0].reference
                 eventRef.delete().addOnSuccessListener {
-                    deleted = true
                     Log.w(TAG, "Event successfully deleted")
                 }.addOnFailureListener { exception ->
                     Log.w(TAG, "Error deleting event", exception)
                 }
             }
-        return deleted
     }
 
     fun searchUsers(query: String) {
@@ -620,6 +617,27 @@ class Repository {
             .addOnFailureListener { e ->
                 Log.e(TAG, "Failed to send message: $e")
             }
+    }
+
+    fun getUserChats(userId: String): LiveData<List<Chat>> {
+        val chatsLiveData = MutableLiveData<List<Chat>>()
+        firestore.collection("chats").whereArrayContains("members", userId)
+            .addSnapshotListener { value, error ->
+                if (value != null) {
+                    val chats = mutableListOf<Chat>()
+                    for (document in value.documents) {
+                        val chat = document.toObject(Chat::class.java)
+                        if (chat != null) {
+                            chats.add(chat)
+                            chatsLiveData.value = chats
+                        }
+                    }
+                    Log.w(TAG, "Chats: $chats")
+                } else {
+                    Log.e(TAG, "Failed to get chats: $error")
+                }
+            }
+        return chatsLiveData
     }
 
 }

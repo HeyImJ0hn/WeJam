@@ -63,8 +63,8 @@ class NearbyViewModel : ViewModel() {
         repository.removeAttendee(event, userId)
     }
 
-    fun deleteEvent(event: Event): Boolean {
-        return repository.deleteEvent(event)
+    fun deleteEvent(event: Event) {
+        repository.deleteEvent(event)
     }
 
     fun favouriteEvent(eventName: String) {
