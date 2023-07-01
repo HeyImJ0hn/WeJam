@@ -17,6 +17,7 @@ class SavedFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeSavedBinding
     private lateinit var viewModel: HomeViewModel
+    private lateinit var adapter: GeneralEventRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,7 @@ class SavedFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         binding = FragmentHomeSavedBinding.inflate(inflater, container, false)
         return binding.root
@@ -35,18 +36,26 @@ class SavedFragment : Fragment() {
         (requireActivity() as InternalActivity).loadingDialog.show()
 
         viewModel.getFavouriteEvents().observe(viewLifecycleOwner) { savedNames ->
+            binding.textView.visibility = View.GONE
+            if (savedNames.isNullOrEmpty())
+                binding.textView.visibility = View.VISIBLE
+
+            adapter = GeneralEventRecyclerViewAdapter(emptyList(), itemClickedListener = {
+                val dialog = EventInfoDialog()
+                dialog.setEvent(it as Event)
+                dialog.show(
+                    requireActivity().supportFragmentManager, "event_info_dialog"
+                )
+            }, requireContext())
+
+            binding.recyclerView.adapter = adapter
+
             val saved = mutableListOf<Event>()
             savedNames?.forEach { name ->
                 viewModel.getEventByName(name).observe(viewLifecycleOwner) { event ->
-                    saved.add(event)
+                    saved.add(event!!)
                     if (saved.size == savedNames.size) {
-                        binding.recyclerView.adapter = GeneralEventRecyclerViewAdapter(saved, itemClickedListener = {
-                            val dialog = EventInfoDialog()
-                            dialog.setEvent(it as Event)
-                            dialog.show(
-                                requireActivity().supportFragmentManager, "event_info_dialog"
-                            )
-                        }, requireContext())
+                        adapter.setEventList(saved)
                     }
                 }
             }

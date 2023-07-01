@@ -14,7 +14,7 @@ import dam.a47471.wejam.model.Event
 import dam_a47471.pokedex.ui.events.OnItemClickedListener
 
 class GeneralEventRecyclerViewAdapter(
-    private val eventList: List<Event>,
+    private var eventList: List<Event>,
     private val itemClickedListener: OnItemClickedListener? = null,
     private val context: Context
 ) : RecyclerView.Adapter<GeneralEventRecyclerViewAdapter.ViewHolder>() {
@@ -57,6 +57,11 @@ class GeneralEventRecyclerViewAdapter(
 
     override fun getItemCount(): Int {
         return eventList.size
+    }
+
+    fun setEventList(eventList: List<Event>) {
+        this.eventList = eventList
+        notifyDataSetChanged()
     }
 
 }

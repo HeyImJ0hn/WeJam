@@ -51,7 +51,6 @@ class CreateEventDialog : BottomSheetDialogFragment() {
                     )
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
                 Log.i(TAG, "User canceled autocomplete")
             }
         }
@@ -175,33 +174,44 @@ class CreateEventDialog : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
 
-            viewModel.createEvent(
-                Firebase.auth.currentUser!!.uid,
-                binding.eventNameEditText.text.toString(),
-                EventType.valueOf(if (binding.jamBtn.isChecked) "JAM" else "CONCERT"),
-                binding.locationEditText.text.toString(),
-                latitude,
-                longitude,
-                binding.timeEditText.text.toString(),
-                binding.dateEditText.text.toString(),
-                mutableListOf(Firebase.auth.currentUser!!.uid)
-            )
-            Toast.makeText(
-                requireContext(),
-                "Created event: ${binding.eventNameEditText.text.toString()}",
-                Toast.LENGTH_SHORT
-            ).show()
+            viewModel.getEventByName(binding.eventNameEditText.text.toString())
+                .observe(viewLifecycleOwner) { event ->
+                    if (event != null) {
+                        binding.eventNameEditText.error = "Event name already exists"
+                        return@observe
+                    }
 
-            parentFragmentManager.fragments.forEach {
-                if (it is MapFragment) {
-                    it.refreshMap()
-                    it.googleMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 17.0f)
+                    viewModel.createEvent(
+                        Firebase.auth.currentUser!!.uid,
+                        binding.eventNameEditText.text.toString(),
+                        EventType.valueOf(if (binding.jamBtn.isChecked) "JAM" else "CONCERT"),
+                        binding.locationEditText.text.toString(),
+                        latitude,
+                        longitude,
+                        binding.timeEditText.text.toString(),
+                        binding.dateEditText.text.toString(),
+                        mutableListOf(Firebase.auth.currentUser!!.uid)
                     )
-                }
-            }
+                    Toast.makeText(
+                        requireContext(),
+                        "Created event: ${binding.eventNameEditText.text.toString()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-            dismiss()
+                    parentFragmentManager.fragments.forEach {
+                        if (it is MapFragment) {
+                            it.refreshMap()
+                            it.googleMap.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    LatLng(latitude, longitude),
+                                    17.0f
+                                )
+                            )
+                        }
+                    }
+
+                    dismiss()
+                }
         }
 
     }

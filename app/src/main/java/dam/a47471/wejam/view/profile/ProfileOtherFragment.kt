@@ -88,24 +88,21 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
             })
 
         if (arguments != null) {
-            user = arguments!!.getParcelable("user")!!
+            user = requireArguments().getParcelable("user")!!
             bindUser(user)
 
-            if (arguments!!.getParcelable<Event>("event") != null)
-                event = arguments!!.getParcelable("event")!!
+            if (requireArguments().getParcelable<Event>("event") != null)
+                event = requireArguments().getParcelable("event")!!
         }
 
-        viewModel.loadFriends()
-        viewModel.loadFriendRequests(Firebase.auth.currentUser!!.uid)
-
-        viewModel.friends.observe(viewLifecycleOwner) { list ->
+        viewModel.getFriends().observe(viewLifecycleOwner) { list ->
             if (list.contains(user.userId!!)) {
                 binding.friendBtn.visibility = View.GONE
                 binding.removeBtn.visibility = View.VISIBLE
             }
         }
 
-        viewModel.friendRequests.observe(viewLifecycleOwner) { list ->
+        viewModel.getFriendRequests(Firebase.auth.currentUser!!.uid).observe(viewLifecycleOwner) { list ->
             if (list.contains(user.userId!!)) {
                 binding.friendBtn.visibility = View.GONE
                 binding.messageBtn.visibility = View.GONE
@@ -114,8 +111,7 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
             }
         }
 
-        viewModel.loadFriendRequests(user.userId!!)
-        viewModel.friendRequests.observe(viewLifecycleOwner) { list ->
+        viewModel.getFriendRequests(user.userId!!).observe(viewLifecycleOwner) { list ->
             if (list.contains(Firebase.auth.currentUser!!.uid)) {
                 binding.friendBtn.visibility = View.GONE
                 binding.requestedBtn.visibility = View.VISIBLE
@@ -134,6 +130,15 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
         }
 
         binding.friendBtn.setOnClickListener {
+            if (user.userId!! == Firebase.auth.currentUser!!.uid) {
+                Toast.makeText(
+                    requireContext(),
+                    "You can't add yourself as a friend",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             viewModel.sendFriendRequest(user.userId!!)
             Toast.makeText(
                 requireContext(),
@@ -191,6 +196,15 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
         }
 
         binding.messageBtn.setOnClickListener {
+            if (user.userId!! == Firebase.auth.currentUser!!.uid) {
+                Toast.makeText(
+                    requireContext(),
+                    "You can't message yourself",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             val bundle = Bundle().apply {
                 putParcelable("user", user)
                 putString("previous", "profileOther")
@@ -218,6 +232,7 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
                 backAction()
                 true
             }
+
             else -> false
         }
     }
@@ -249,11 +264,19 @@ class ProfileOtherFragment : Fragment(), MenuProvider {
                 .load(it)
                 .into(binding.profileImage)
         }.addOnFailureListener {
-            println("Error loading user picture, replacing with default")
-            viewModel.getDefaultAvatar().addOnSuccessListener {
+            println("Error loading user picture, checking for google image.")
+            viewModel.getGoogleUserPicture(user.userId).addOnSuccessListener {
+                println("Got google image: ${it.value}")
                 Glide.with(requireContext())
-                    .load(it)
+                    .load(it.value)
                     .into(binding.profileImage)
+            }.addOnFailureListener {
+                println("Error loading google user picture, loading default avatar.")
+                viewModel.getDefaultAvatar().addOnSuccessListener {
+                    Glide.with(requireContext())
+                        .load(it)
+                        .into(binding.profileImage)
+                }
             }
         }
 

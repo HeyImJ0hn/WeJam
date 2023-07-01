@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationServices
@@ -134,6 +135,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
 
             viewModel.getEventByName(marker.tag as String).observe(viewLifecycleOwner) {
+                if (it == null) {
+                    Toast.makeText(requireContext(), "Event no longer available", Toast.LENGTH_SHORT).show()
+                    return@observe
+                }
                 val dialog = EventInfoDialog()
                 dialog.setEvent(it)
                 dialog.show(requireActivity().supportFragmentManager, "event_info_dialog")

@@ -12,7 +12,7 @@ import dam.a47471.wejam.model.User
 import dam_a47471.pokedex.ui.events.OnItemClickedListener
 
 class RequestListAdapter(
-    private val userList: List<User>,
+    private var userList: List<User>,
     private val itemClickedListener: OnItemClickedListener? = null,
     private val context: Context
 ) : RecyclerView.Adapter<RequestListAdapter.ViewHolder>() {
@@ -43,6 +43,11 @@ class RequestListAdapter(
 
     override fun getItemCount(): Int {
         return userList.size
+    }
+
+    fun updateList(newList: List<User>) {
+        userList = newList
+        notifyDataSetChanged()
     }
 
 

@@ -30,7 +30,6 @@ class FriendsFragment : Fragment() {
     ): View {
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         binding = FragmentHomeFriendsBinding.inflate(inflater, container, false)
-        viewModel.loadFriends()
         return binding.root
     }
 
@@ -41,16 +40,21 @@ class FriendsFragment : Fragment() {
 
         val events: MutableList<Event> = mutableListOf()
 
-        viewModel.friends.observe(viewLifecycleOwner) { friends ->
+        viewModel.getFriends().observe(viewLifecycleOwner) { friends ->
+            binding.textView.visibility = View.GONE
+            if (friends.isEmpty())
+                binding.textView.visibility = View.VISIBLE
             var i = 0
             friends.forEach { friend ->
                 viewModel.getEventsByAttendee(friend).observe(viewLifecycleOwner) { eventList ->
                     events.addAll(eventList)
                     if (i >= friends.size) {
+                        val filteredEvents = events.distinct().filter {!Utils.isCurrentDateAfter(it.date)}
+                        binding.textView.visibility = View.GONE
+                        if (filteredEvents.isEmpty())
+                            binding.textView.visibility = View.VISIBLE
                         binding.recyclerView.adapter =
-                            FriendsEventListAdapter(events.distinct().filter {
-                                !Utils.isCurrentDateAfter(it.date)
-                            }, itemClickedListener = { event ->
+                            FriendsEventListAdapter(filteredEvents, itemClickedListener = { event ->
                                 val dialog = EventInfoDialog()
                                 dialog.setEvent(event as Event)
                                 dialog.show(

@@ -31,36 +31,34 @@ class ListFragment : Fragment() {
     ): View {
         binding = FragmentNearbyListBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[NearbyViewModel::class.java]
-
+        viewModel.loadUser(FirebaseAuth.getInstance().currentUser!!.uid)
         (requireActivity() as InternalActivity).loadingDialog.show()
-
-        viewModel.user.observe(viewLifecycleOwner) {
-            user = it
-        }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loadUser(FirebaseAuth.getInstance().currentUser!!.uid)
+        viewModel.user.observe(viewLifecycleOwner) {
+            user = it
 
-        viewModel.getEvents().observe(viewLifecycleOwner) {it ->
-            events = it
-            binding.nearbyListRecyclerView.adapter = EventListAdapter(it, itemClickedListener = { event ->
-                val e = event as Event
+            viewModel.getEvents().observe(viewLifecycleOwner) {list ->
+                events = list
+                println("Events Size: ${events.size}")
+                binding.nearbyListRecyclerView.adapter = EventListAdapter(list, itemClickedListener = { event ->
+                    val e = event as Event
 
-                val dialog = EventInfoDialog()
-                dialog.setEvent(e)
-                dialog.show(requireActivity().supportFragmentManager, "event_info_dialog")
+                    val dialog = EventInfoDialog()
+                    dialog.setEvent(e)
+                    dialog.show(requireActivity().supportFragmentManager, "event_info_dialog")
 
-            }, requireContext())
+                }, requireContext())
 
-            val adapter = binding.nearbyListRecyclerView.adapter as EventListAdapter
-            adapter.filterDistance(user.lat!!, user.long!!)
-            adapter.filterType(EventType.JAM)
-            (requireActivity() as InternalActivity).loadingDialog.dismiss()
+                val adapter = binding.nearbyListRecyclerView.adapter as EventListAdapter
+                adapter.filterDistance(user.lat!!, user.long!!)
+                adapter.filterType(EventType.JAM)
+                (requireActivity() as InternalActivity).loadingDialog.dismiss()
+            }
         }
 
         binding.searchBar.setOnClickListener {

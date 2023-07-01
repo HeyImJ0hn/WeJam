@@ -28,4 +28,5 @@ data class User(
         parcel.readDouble(),
         parcel.readDouble()
     )
+
 }

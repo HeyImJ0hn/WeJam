@@ -37,10 +37,11 @@ class AttendingFragment : Fragment() {
         (requireActivity() as InternalActivity).loadingDialog.show()
 
         viewModel.getEventsByAttendee(Firebase.auth.currentUser!!.uid)
-            .observe(viewLifecycleOwner) { events ->
-                binding.attendingRecyclerView.adapter = AttendingListAdapter(events.filter {
-                    !Utils.isCurrentDateAfter(it.date)
-                }, itemClickedListener = { event ->
+            .observe(viewLifecycleOwner) {list ->
+                val events = list.filter {!Utils.isCurrentDateAfter(it.date)}
+                if (events.isEmpty())
+                    binding.textView.visibility = View.VISIBLE
+                binding.attendingRecyclerView.adapter = AttendingListAdapter(events, itemClickedListener = { event ->
                     val dialog = EventInfoDialog()
                     dialog.setEvent(event as Event)
                     dialog.show(requireActivity().supportFragmentManager, "event_info_dialog")

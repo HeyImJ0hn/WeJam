@@ -51,7 +51,7 @@ class NearbyViewModel : ViewModel() {
         repository.updateLocation(userId, lat, long)
     }
 
-    fun getEventByName(name: String): LiveData<Event> {
+    fun getEventByName(name: String): LiveData<Event?> {
         return repository.getEventByName(name)
     }
 

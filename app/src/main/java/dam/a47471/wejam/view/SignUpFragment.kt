@@ -39,17 +39,30 @@ class SignUpFragment : Fragment() {
 
         binding.signUpBtn.setOnClickListener {
             (activity as MainActivity).loadingDialog.show()
-            viewModel.registerUser(binding.emailInput.text.toString(), binding.passwordInput.text.toString(), binding.confirmPasswordInput.text.toString(), binding.usernameInput.text.toString())
+            println(binding.usernameInput.text.toString().trim())
+            viewModel.searchUsers(binding.usernameInput.text.toString().trim())
+            viewModel.searchResult().observe(viewLifecycleOwner) { users ->
+                if (users.isEmpty()) {
+                    viewModel.registerUser(binding.emailInput.text.toString().trim(), binding.passwordInput.text.toString().trim(), binding.confirmPasswordInput.text.toString().trim(), binding.usernameInput.text.toString().trim())
+                } else {
+                    (activity as MainActivity).loadingDialog.dismiss()
+                    Toast.makeText(context, "Username already taken", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
-        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner, Observer<Boolean> { isRegistrationSuccessful ->
-            if (isRegistrationSuccessful) {
+        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner) {
+            if (it) {
                 Toast.makeText(context, "Registered user", Toast.LENGTH_SHORT).show()
             } else {
-                (activity as InternalActivity).loadingDialog.dismiss()
+                (activity as MainActivity).loadingDialog.dismiss()
                 Toast.makeText(context, "Failed to register user", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+
+        binding.googleBtn.setOnClickListener {
+            (requireActivity() as MainActivity).oneTapSignIn()
+        }
     }
 
     override fun onDestroyView() {

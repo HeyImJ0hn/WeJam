@@ -32,7 +32,6 @@ class FriendsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[InboxViewModel::class.java]
-        viewModel.loadFriends()
         binding = FragmentInboxFriendsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -58,9 +57,11 @@ class FriendsFragment : Fragment() {
 
         binding.searchBar.clearFocus()
 
-        viewModel.friends.observe(viewLifecycleOwner) { ids ->
+        viewModel.getFriends().observe(viewLifecycleOwner) { ids ->
+            binding.tvNoFriends.visibility = View.GONE
             if (ids.isEmpty()) {
                 binding.tvNoFriends.visibility = View.VISIBLE
+                adapter?.updateUserList(emptyList())
                 return@observe
             }
 
@@ -69,7 +70,7 @@ class FriendsFragment : Fragment() {
                 viewModel.loadUser(id)
                 viewModel.user.observe(viewLifecycleOwner) { user ->
                     friends.add(user)
-                    adapter?.updateUserList(friends)
+                    adapter?.updateUserList(friends.distinct())
                 }
             }
         }

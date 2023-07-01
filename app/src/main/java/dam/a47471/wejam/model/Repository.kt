@@ -51,6 +51,12 @@ class Repository {
     ) {
         val user = User(userId, username, realName, email, bio, pPicUri, bannerUri, 0.0, 0.0)
         database.child("users").child(userId).setValue(user)
+        firestore.collection("friends").document(userId)
+            .set(hashMapOf("friends" to listOf<String>()))
+        firestore.collection("requests").document(userId)
+            .set(hashMapOf("friends" to listOf<String>()))
+        firestore.collection("favourites").document(userId)
+            .set(hashMapOf("events" to listOf<String>()))
     }
 
     fun updateUser(userId: String, username: String, realName: String, email: String, bio: String) {
@@ -60,7 +66,7 @@ class Repository {
 
         userReference.child("username").setValue(username)
         userReference.child("realName").setValue(realName)
-        userReference.child("email").setValue(email)
+        //userReference.child("email").setValue(email)
         userReference.child("bio").setValue(bio)
     }
 
@@ -116,6 +122,10 @@ class Repository {
         return storage.reference.child("profile").child(userId).child("picture").downloadUrl
     }
 
+    fun getGoogleProfilePicture(userId: String): Task<DataSnapshot> {
+        return database.child("users").child(userId).child("profilePicture").get()
+    }
+
     fun uploadBannerPicture(userId: String, uri: Uri) {
         storage.reference.child("profile").child(userId).child("banner").putFile(uri)
             .addOnCompleteListener {
@@ -142,18 +152,18 @@ class Repository {
     fun getEvents(): LiveData<List<Event>> {
         val eventsLiveData = MutableLiveData<List<Event>>()
 
-        firestore.collection("events").get().addOnSuccessListener { querySnapshot: QuerySnapshot ->
+        firestore.collection("events").get().addOnSuccessListener {
             val events = mutableListOf<Event>()
-            for (document in querySnapshot.documents) {
-                val owner = document.getString("owner")!!
-                val name = document.getString("name")!!
-                val type = document.getString("type")!!
-                val locationName = document.getString("locationName")!!
-                val lat = document.getDouble("lat")!!
-                val long = document.getDouble("long")!!
-                val time = document.getString("time")!!
-                val date = document.getString("date")!!
-                val attendees = document.get("attendees")!!
+            for (document in it.documents) {
+                val owner = document.getString("owner") ?: continue
+                val name = document.getString("name") ?: continue
+                val type = document.getString("type") ?: continue
+                val locationName = document.getString("locationName") ?: continue
+                val lat = document.getDouble("lat") ?: continue
+                val long = document.getDouble("long") ?: continue
+                val time = document.getString("time") ?: continue
+                val date = document.getString("date") ?: continue
+                val attendees = document.get("attendees") ?: continue
 
                 events.add(
                     Event(
@@ -170,17 +180,23 @@ class Repository {
                 )
             }
             eventsLiveData.value = events
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Error getting documents: ", exception)
+        }.addOnFailureListener { e ->
+            Log.w(TAG, "Error getting events: ", e)
         }
+
         return eventsLiveData
     }
 
-    fun getEventByName(eventName: String): LiveData<Event> {
-        val eventLiveData = MutableLiveData<Event>()
+    fun getEventByName(eventName: String): LiveData<Event?> {
+        val eventLiveData = MutableLiveData<Event?>()
 
         firestore.collection("events").whereEqualTo("name", eventName).limit(1).get()
             .addOnSuccessListener { querySnapshot: QuerySnapshot ->
+                if (querySnapshot.documents.isEmpty()) {
+                    eventLiveData.value = null
+                    return@addOnSuccessListener
+                }
+
                 val document = querySnapshot.documents[0]
 
                 val owner = document.getString("owner")!!
@@ -344,6 +360,8 @@ class Repository {
             .startAt(query.lowercase())
             .endAt(query.lowercase() + "\uf8ff")
 
+        println(query)
+
         if (query.isEmpty()) {
             _userSearchResult.value = emptyList()
             return
@@ -386,16 +404,34 @@ class Repository {
     }
 
     fun sendFriendRequest(friendId: String) {
-        val ref = database.child("friends").child("requests").child(friendId)
-        ref.push().setValue(Firebase.auth.currentUser!!.uid).addOnSuccessListener {
+        firestore.collection("requests").document(friendId).update(
+            "friends",
+            FieldValue.arrayUnion(Firebase.auth.currentUser!!.uid)
+        ).addOnSuccessListener {
             Log.w(TAG, "Friend request sent")
         }.addOnFailureListener { exception ->
             Log.w(TAG, "Failed sending friend request", exception)
         }
+
+        /*val ref = database.child("friends").child("requests").child(friendId)
+        ref.push().setValue(Firebase.auth.currentUser!!.uid).addOnSuccessListener {
+            Log.w(TAG, "Friend request sent")
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Failed sending friend request", exception)
+        }*/
     }
 
     fun removeFriendRequest(userId: String, friendId: String) {
-        val ref = database.child("friends").child("requests").child(userId)
+        firestore.collection("requests").document(friendId).update(
+            "friends",
+            FieldValue.arrayRemove(userId)
+        ).addOnSuccessListener {
+            Log.w(TAG, "Friend request removed")
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Failed removing friend request", exception)
+        }
+
+        /*val ref = database.child("friends").child("requests").child(userId)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -410,11 +446,27 @@ class Repository {
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.e(TAG, "Failed to remove friend request: $databaseError")
             }
-        })
+        })*/
+    }
+
+    private fun addFriend(friendId1: String, friendId2: String) {
+        firestore.collection("friends").document(friendId1).update(
+            "friends",
+            FieldValue.arrayUnion(friendId2)
+        ).addOnSuccessListener {
+            Log.w(TAG, "Added to my friend list")
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Failed accepting friend request", exception)
+        }
     }
 
     fun acceptFriendRequest(friendId: String) {
-        var ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
+
+        addFriend(Firebase.auth.currentUser!!.uid, friendId)
+        addFriend(friendId, Firebase.auth.currentUser!!.uid)
+        removeFriendRequest(friendId, Firebase.auth.currentUser!!.uid)
+
+        /*var ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
         ref.push().setValue(friendId).addOnSuccessListener {
             Log.w(TAG, "Added to my friend list")
         }.addOnFailureListener { exception ->
@@ -426,13 +478,22 @@ class Repository {
             Log.w(TAG, "Added to friend's friend list")
         }.addOnFailureListener { exception ->
             Log.w(TAG, "Failed accepting friend request", exception)
-        }
+        }*/
 
-        removeFriendRequest(Firebase.auth.currentUser!!.uid, friendId)
     }
 
-    fun getFriendList(callback: (List<String>) -> Unit) {
-        val ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
+    fun getFriendList(): LiveData<List<String>> {
+        val friends = MutableLiveData<List<String>>()
+        firestore.collection("friends").document(Firebase.auth.currentUser!!.uid)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e(TAG, "Failed to get friends list: $error")
+                    return@addSnapshotListener
+                }
+                friends.value = value?.get("friends") as List<String>
+            }
+
+        /*val ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -448,10 +509,23 @@ class Repository {
                 Log.e(TAG, "Failed to get friends list: $error")
                 callback(emptyList())
             }
-        })
+        })*/
+        return friends
     }
 
-    fun getFriendRequests(userId: String, callback: (List<String>) -> Unit) {
+    fun getFriendRequests(userId: String): LiveData<List<String>> {
+        val friendRequests = MutableLiveData<List<String>>()
+
+        firestore.collection("requests").document(userId)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e(TAG, "Failed to get friend requests: $error")
+                    return@addSnapshotListener
+                }
+                friendRequests.value = value?.get("friends") as List<String>
+            }
+
+        /*
         val ref = database.child("friends").child("requests").child(userId)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -468,10 +542,26 @@ class Repository {
                 Log.e(TAG, "Failed to get friend requests: $error")
                 callback(emptyList())
             }
-        })
+        })*/
+        return friendRequests
+    }
+
+    private fun removeFriend(friendId1: String, friendId2: String) {
+        firestore.collection("friends").document(friendId1).update(
+            "friends",
+            FieldValue.arrayRemove(friendId2)
+        ).addOnSuccessListener {
+            Log.w(TAG, "Removed from friend list")
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Failed removing friend", exception)
+        }
     }
 
     fun removeFriend(friendId: String) {
+        removeFriend(Firebase.auth.currentUser!!.uid, friendId)
+        removeFriend(friendId, Firebase.auth.currentUser!!.uid)
+
+        /*
         val ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -504,77 +594,44 @@ class Repository {
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.e(TAG, "Failed to remove friend: $databaseError")
             }
-        })
+        })*/
     }
 
     fun favouriteEvent(eventName: String) {
-        val ref = database.child("users").child(Firebase.auth.currentUser!!.uid).child("favourites")
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val fav = mutableListOf<String>()
-                val favourites =
-                    dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
-                favourites?.let { fav.addAll(it) }
-
-                fav.add(eventName)
-
-                ref.setValue(fav).addOnSuccessListener {
-                    Log.w(TAG, "Added event to favourites")
-                }.addOnFailureListener { exception ->
-                    Log.w(TAG, "Failed adding event to favourites", exception)
-                }
-
+        firestore.collection("favourites").document(Firebase.auth.currentUser!!.uid)
+            .update("events", FieldValue.arrayUnion(eventName))
+            .addOnSuccessListener {
+                Log.w(TAG, "Added event to favourites")
+            }.addOnFailureListener { exception ->
+                Log.w(TAG, "Failed adding event to favourites", exception)
             }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to add event to favourites: $databaseError")
-            }
-        })
     }
 
     fun unfavouriteEvent(eventName: String) {
-        val ref = database.child("users").child(Firebase.auth.currentUser!!.uid).child("favourites")
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val fav = mutableListOf<String>()
-                val favourites =
-                    dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
-                favourites?.let { fav.addAll(it) }
-
-                fav.remove(eventName)
-
-                ref.setValue(fav).addOnSuccessListener {
-                    Log.w(TAG, "Removed event from favourites")
-                }.addOnFailureListener { exception ->
-                    Log.w(TAG, "Failed to remove event from favourites", exception)
-                }
-
+        firestore.collection("favourites").document(Firebase.auth.currentUser!!.uid)
+            .update("events", FieldValue.arrayRemove(eventName))
+            .addOnSuccessListener {
+                Log.w(TAG, "Removed event from favourites")
+            }.addOnFailureListener { exception ->
+                Log.w(TAG, "Failed to remove event from favourites", exception)
             }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to remove event from favourites: $databaseError")
-            }
-        })
     }
 
     fun getFavouriteEvents(): LiveData<List<String>?> {
         val events = MutableLiveData<List<String>?>()
-        val ref = database.child("users").child(Firebase.auth.currentUser!!.uid).child("favourites")
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val fav = mutableListOf<String>()
-                val favourites =
-                    dataSnapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
-                events.value = favourites
-            }
+        firestore.collection("favourites").document(Firebase.auth.uid!!)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e(TAG, "Failed to get favourite events: $error")
+                    events.value = null
+                    return@addSnapshotListener
+                }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to remove event from favourites: $databaseError")
+                events.value = value?.get("events") as List<String>?
             }
-        })
         return events
     }
 

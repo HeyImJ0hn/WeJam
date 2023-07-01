@@ -38,6 +38,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/textView"
+        android:visibility="gone"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/searchBarContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="@font/roboto_medium"
+        android:textSize="26sp"
+        android:textAlignment="center"
+        android:text="@string/you_have_no_upcoming_events"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/attendingRecyclerView"
         android:layout_width="match_parent"

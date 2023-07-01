@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.DataSnapshot
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.Repository
 import dam.a47471.wejam.model.User
@@ -13,14 +14,6 @@ class ProfileViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
     val user: LiveData<User>
         get() = _user
-
-    private val _friends = MutableLiveData<List<String>>()
-    val friends: LiveData<List<String>>
-        get() = _friends
-
-    private val _friendRequests = MutableLiveData<List<String>>()
-    val friendRequests: LiveData<List<String>>
-        get() = _friendRequests
 
     private val repository: Repository = Repository()
 
@@ -32,6 +25,10 @@ class ProfileViewModel : ViewModel() {
 
     fun getUserPicture(id: String): Task<Uri> {
         return repository.getProfilePicture(id)
+    }
+
+    fun getGoogleUserPicture(id: String): Task<DataSnapshot> {
+        return repository.getGoogleProfilePicture(id)
     }
 
     fun getDefaultAvatar(): Task<Uri> {
@@ -46,16 +43,12 @@ class ProfileViewModel : ViewModel() {
         repository.sendFriendRequest(friendId)
     }
 
-    fun loadFriends() {
-        repository.getFriendList { friends ->
-            _friends.value = friends
-        }
+    fun getFriendRequests(userId: String): LiveData<List<String>> {
+        return repository.getFriendRequests(userId)
     }
 
-    fun loadFriendRequests(userId: String) {
-        repository.getFriendRequests(userId) { friendRequests ->
-            _friendRequests.value = friendRequests
-        }
+    fun getFriends(): LiveData<List<String>> {
+        return repository.getFriendList()
     }
 
     fun acceptFriendRequest(friendId: String) {

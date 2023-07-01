@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:fontFamily="@font/roboto_medium"
         android:textSize="26sp"
-        android:text="No friend requests :("/>
+        android:text="@string/no_friend_requests"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

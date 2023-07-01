@@ -25,8 +25,6 @@ class EventListAdapter(
     private var filteredEventList: List<Event> = eventList
     private var originalEventList: List<Event> = eventList
 
-    private var isFilterActive: Boolean = false
-
     private var nameFilter: String = ""
     private var typeFilter: EventType? = null
     private var distanceFilterEnabled: Boolean = false
@@ -119,16 +117,9 @@ class EventListAdapter(
         notifyDataSetChanged() // Notify the adapter that the data has changed
     }
 
-    fun clearFilters() {
-        nameFilter = ""
-        typeFilter = null
-        distanceFilterEnabled = false
-        isFilterActive = false
+    fun updateList(newList: List<Event>) {
+        filteredEventList = newList
         applyFilters()
-    }
-
-    fun isFilterActive(): Boolean {
-        return isFilterActive
     }
 
     private fun eventInRange(event: Event, lat: Double, long: Double): Double {

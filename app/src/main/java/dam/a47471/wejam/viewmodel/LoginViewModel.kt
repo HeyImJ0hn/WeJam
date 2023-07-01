@@ -12,6 +12,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dam.a47471.wejam.model.Repository
+import dam.a47471.wejam.model.User
 
 
 class LoginViewModel : ViewModel() {
@@ -22,6 +23,8 @@ class LoginViewModel : ViewModel() {
     private val _isLoginSuccessful = MutableLiveData<Boolean>()
     val isLoginSuccessful: LiveData<Boolean>
         get() = _isLoginSuccessful
+
+    private val repository = Repository()
 
     fun loginUser(email: String, password: String) {
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -55,7 +58,7 @@ class LoginViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
-                    Repository().writeNewUser(
+                    repository.writeNewUser(
                         user!!.uid,
                         name,
                         "",
@@ -81,7 +84,7 @@ class LoginViewModel : ViewModel() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(ContentValues.TAG, "signInWithCredential:success")
                     val user = Firebase.auth.currentUser!!
-                    Repository().writeNewUser(
+                    repository.writeNewUser(
                         user.uid,
                         user.email!!.split("@")[0],
                         user.displayName!!,
@@ -102,6 +105,13 @@ class LoginViewModel : ViewModel() {
     private fun isEmailValid(email: String): Boolean {
         val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9._-]+")
         return emailPattern.matches(email)
+    }
+
+    fun searchUsers(username: String) {
+        repository.searchUsers(username)
+    }
+    fun searchResult(): LiveData<List<User>> {
+        return repository.userSearchResult
     }
 
     private fun doPasswordsMatch(password: String, confirmation: String): Boolean {

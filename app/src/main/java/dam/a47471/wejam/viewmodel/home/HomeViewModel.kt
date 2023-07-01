@@ -16,10 +16,6 @@ class HomeViewModel : ViewModel() {
     val user: LiveData<User>
         get() = _user
 
-    private val _friends = MutableLiveData<List<String>>()
-    val friends: LiveData<List<String>>
-        get() = _friends
-
     fun getEvents(): LiveData<List<Event>> {
         return repository.getEvents()
     }
@@ -42,7 +38,7 @@ class HomeViewModel : ViewModel() {
         repository.updateLocation(userId, lat, long)
     }
 
-    fun getEventByName(name: String): LiveData<Event> {
+    fun getEventByName(name: String): LiveData<Event?> {
         return repository.getEventByName(name)
     }
 
@@ -58,10 +54,8 @@ class HomeViewModel : ViewModel() {
         return repository.deleteEvent(event)
     }
 
-    fun loadFriends() {
-        repository.getFriendList {
-            _friends.value = it
-        }
+    fun getFriends(): LiveData<List<String>> {
+        return repository.getFriendList()
     }
 
     fun getFavouriteEvents(): LiveData<List<String>?> {

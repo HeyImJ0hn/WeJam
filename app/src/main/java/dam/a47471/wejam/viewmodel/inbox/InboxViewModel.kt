@@ -10,24 +10,14 @@ import dam.a47471.wejam.model.User
 
 class InboxViewModel : ViewModel() {
 
-    private val _friendRequests = MutableLiveData<List<String>>()
-    val friendRequests: MutableLiveData<List<String>>
-        get() = _friendRequests
-
     private val _user = MutableLiveData<User>()
     val user: MutableLiveData<User>
         get() = _user
 
-    private val _friends = MutableLiveData<List<String>>()
-    val friends: LiveData<List<String>>
-        get() = _friends
-
     private val repository = Repository()
 
-    fun loadFriendRequests(userId: String) {
-        repository.getFriendRequests(userId) { friendRequests ->
-            _friendRequests.value = friendRequests
-        }
+    fun getFriendRequests(userId: String): LiveData<List<String>> {
+        return repository.getFriendRequests(userId)
     }
 
     fun loadUser(userId: String) {
@@ -48,10 +38,8 @@ class InboxViewModel : ViewModel() {
         return repository.getUserChats(userId)
     }
 
-    fun loadFriends() {
-        repository.getFriendList {
-            _friends.value = it
-        }
+    fun getFriends(): LiveData<List<String>> {
+        return repository.getFriendList()
     }
 
 }
