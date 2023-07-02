@@ -40,23 +40,12 @@ class Repository {
     val userSearchResult: LiveData<List<User>>
         get() = _userSearchResult
 
-    fun writeNewUser(
-        userId: String,
-        username: String,
-        realName: String,
-        email: String,
-        bio: String,
-        pPicUri: String,
-        bannerUri: String
-    ) {
+    fun writeNewUser(userId: String, username: String, realName: String, email: String, bio: String, pPicUri: String, bannerUri: String) {
         val user = User(userId, username.lowercase(), realName, email, bio, pPicUri, bannerUri, 0.0, 0.0)
         database.child("users").child(userId).setValue(user)
-        firestore.collection("friends").document(userId)
-            .set(hashMapOf("friends" to listOf<String>()))
-        firestore.collection("requests").document(userId)
-            .set(hashMapOf("friends" to listOf<String>()))
-        firestore.collection("favourites").document(userId)
-            .set(hashMapOf("events" to listOf<String>()))
+        firestore.collection("friends").document(userId).set(hashMapOf("friends" to listOf<String>()))
+        firestore.collection("requests").document(userId).set(hashMapOf("friends" to listOf<String>()))
+        firestore.collection("favourites").document(userId).set(hashMapOf("events" to listOf<String>()))
     }
 
     fun updateUser(userId: String, username: String, realName: String, email: String, bio: String) {
@@ -66,7 +55,6 @@ class Repository {
 
         userReference.child("username").setValue(username.lowercase())
         userReference.child("realName").setValue(realName)
-        //userReference.child("email").setValue(email)
         userReference.child("bio").setValue(bio)
     }
 
@@ -412,13 +400,6 @@ class Repository {
         }.addOnFailureListener { exception ->
             Log.w(TAG, "Failed sending friend request", exception)
         }
-
-        /*val ref = database.child("friends").child("requests").child(friendId)
-        ref.push().setValue(Firebase.auth.currentUser!!.uid).addOnSuccessListener {
-            Log.w(TAG, "Friend request sent")
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Failed sending friend request", exception)
-        }*/
     }
 
     fun removeFriendRequest(userId: String, friendId: String) {
@@ -430,23 +411,6 @@ class Repository {
         }.addOnFailureListener { exception ->
             Log.w(TAG, "Failed removing friend request", exception)
         }
-
-        /*val ref = database.child("friends").child("requests").child(userId)
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (requestSnapshot in dataSnapshot.children) {
-                    val request = requestSnapshot.getValue(String::class.java)
-                    if (request == friendId) {
-                        requestSnapshot.ref.removeValue()
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to remove friend request: $databaseError")
-            }
-        })*/
     }
 
     private fun addFriend(friendId1: String, friendId2: String) {
@@ -461,25 +425,9 @@ class Repository {
     }
 
     fun acceptFriendRequest(friendId: String) {
-
         addFriend(Firebase.auth.currentUser!!.uid, friendId)
         addFriend(friendId, Firebase.auth.currentUser!!.uid)
         removeFriendRequest(friendId, Firebase.auth.currentUser!!.uid)
-
-        /*var ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
-        ref.push().setValue(friendId).addOnSuccessListener {
-            Log.w(TAG, "Added to my friend list")
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Failed accepting friend request", exception)
-        }
-
-        ref = database.child("friends").child("list").child(friendId)
-        ref.push().setValue(Firebase.auth.currentUser!!.uid).addOnSuccessListener {
-            Log.w(TAG, "Added to friend's friend list")
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Failed accepting friend request", exception)
-        }*/
-
     }
 
     fun getFriendList(): LiveData<List<String>> {
@@ -492,24 +440,6 @@ class Repository {
                 }
                 friends.value = value?.get("friends") as List<String>
             }
-
-        /*val ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val friends = mutableListOf<String>()
-                for (childSnapshot in snapshot.children) {
-                    val friendId = childSnapshot.value
-                    friendId.let { friends.add(it.toString()) }
-                }
-                callback(friends)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Failed to get friends list: $error")
-                callback(emptyList())
-            }
-        })*/
         return friends
     }
 
@@ -524,25 +454,6 @@ class Repository {
                 }
                 friendRequests.value = value?.get("friends") as List<String>
             }
-
-        /*
-        val ref = database.child("friends").child("requests").child(userId)
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val friendRequests = mutableListOf<String>()
-                for (childSnapshot in snapshot.children) {
-                    val friendId = childSnapshot.value
-                    friendId.let { friendRequests.add(it.toString()) }
-                }
-                callback(friendRequests)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Failed to get friend requests: $error")
-                callback(emptyList())
-            }
-        })*/
         return friendRequests
     }
 
@@ -560,41 +471,6 @@ class Repository {
     fun removeFriend(friendId: String) {
         removeFriend(Firebase.auth.currentUser!!.uid, friendId)
         removeFriend(friendId, Firebase.auth.currentUser!!.uid)
-
-        /*
-        val ref = database.child("friends").child("list").child(Firebase.auth.currentUser!!.uid)
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (friendSnapshot in dataSnapshot.children) {
-                    val friend = friendSnapshot.getValue(String::class.java)
-                    if (friend == friendId) {
-                        friendSnapshot.ref.removeValue()
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to remove friend: $databaseError")
-            }
-        })
-
-        val ref2 = database.child("friends").child("list").child(friendId)
-
-        ref2.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (friendSnapshot in dataSnapshot.children) {
-                    val friend = friendSnapshot.getValue(String::class.java)
-                    if (friend == Firebase.auth.currentUser!!.uid) {
-                        friendSnapshot.ref.removeValue()
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e(TAG, "Failed to remove friend: $databaseError")
-            }
-        })*/
     }
 
     fun favouriteEvent(eventName: String) {

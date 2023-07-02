@@ -116,10 +116,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     fun refreshMap() {
-        // Clear existing markers
         googleMap.clear()
 
-        // Re-add markers with updated data
         viewModel.getEvents().observe(viewLifecycleOwner) {events ->
             events.forEach {
                 if (Utils.isCurrentDateAfter(it.date))

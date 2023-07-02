@@ -50,24 +50,24 @@ class ChatAdapter(private var messages: List<Message>) :
         return if (messages[position].sender == Firebase.auth.currentUser!!.uid) VIEW_TYPE_SENT else VIEW_TYPE_RECEIVED
     }
 
-    inner class ReceivedMessageViewHolder(private val binding: ChatReceiveBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(message: Message) {
-            binding.messageText.text = message.message
-        }
-    }
-
-    inner class SentMessageViewHolder(private val binding: ChatSendBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(message: Message) {
-            binding.messageText.text = message.message
-        }
-    }
-
     fun updateMessages(newMessages: List<Message>) {
         messages = newMessages
         notifyDataSetChanged()
+    }
+}
+
+class ReceivedMessageViewHolder(private val binding: ChatReceiveBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(message: Message) {
+        binding.messageText.text = message.message
+    }
+}
+
+class SentMessageViewHolder(private val binding: ChatSendBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(message: Message) {
+        binding.messageText.text = message.message
     }
 }

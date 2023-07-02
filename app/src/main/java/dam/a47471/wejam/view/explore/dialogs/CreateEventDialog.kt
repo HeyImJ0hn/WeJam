@@ -96,11 +96,8 @@ class CreateEventDialog : BottomSheetDialogFragment() {
         }
 
         binding.locationEditText.setOnClickListener {
-            // Set the fields to specify which types of place data to
-            // return after the user has made a selection.
             val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
 
-            // Start the autocomplete intent.
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .build(requireContext())
             startAutocomplete.launch(intent)

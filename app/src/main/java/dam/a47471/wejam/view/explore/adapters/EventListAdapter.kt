@@ -114,7 +114,7 @@ class EventListAdapter(
             include
         }
 
-        notifyDataSetChanged() // Notify the adapter that the data has changed
+        notifyDataSetChanged()
     }
 
     fun updateList(newList: List<Event>) {

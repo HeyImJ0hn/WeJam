@@ -54,9 +54,8 @@ class ChatFragment : Fragment(), MenuProvider {
             findNavController().navigateUp()
         }
 
-        otherUser = arguments!!.getParcelable("user")!!
-        previous = arguments!!.getString("previous")
-
+        otherUser = requireArguments().getParcelable("user")!!
+        previous = requireArguments().getString("previous")
 
         binding.toolbar.title = ""
         binding.user = otherUser

@@ -74,11 +74,6 @@ class MainActivity : AppCompatActivity() {
 
         oneTapClient = Identity.getSignInClient(this)
         signInRequest = BeginSignInRequest.builder()
-            .setPasswordRequestOptions(
-                BeginSignInRequest.PasswordRequestOptions.builder()
-                    .setSupported(true)
-                    .build()
-            )
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
@@ -163,6 +158,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun oneTapSignIn() {
+        loadingDialog.show()
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener(this) { result ->
                 try {
@@ -171,12 +167,16 @@ class MainActivity : AppCompatActivity() {
                         null, 0, 0, 0, null
                     )
                 } catch (e: IntentSender.SendIntentException) {
+                    Toast.makeText(this, "Couldn't start One Tap UI", Toast.LENGTH_SHORT).show()
                     Log.e(ContentValues.TAG, "Couldn't start One Tap UI: ${e.localizedMessage}")
                 }
+                loadingDialog.dismiss()
             }
             .addOnFailureListener(this) { e ->
                 // No saved credentials found. Launch the One Tap sign-up flow, or
                 // do nothing and continue presenting the signed-out UI.
+                loadingDialog.dismiss()
+                Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
                 Log.d(ContentValues.TAG, e.localizedMessage)
             }
     }

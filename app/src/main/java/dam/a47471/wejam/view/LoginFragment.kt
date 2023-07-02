@@ -27,7 +27,6 @@ class LoginFragment : Fragment() {
     ): View {
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         binding = FragmentLoginBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 

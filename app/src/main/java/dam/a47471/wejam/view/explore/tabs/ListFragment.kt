@@ -44,7 +44,6 @@ class ListFragment : Fragment() {
 
             viewModel.getEvents().observe(viewLifecycleOwner) {list ->
                 events = list
-                println("Events Size: ${events.size}")
                 binding.nearbyListRecyclerView.adapter = EventListAdapter(list, itemClickedListener = { event ->
                     val e = event as Event
 
