@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -145,6 +146,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
 
             true
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            2 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
+                    refreshMap()
+                } else {
+                    Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                }
+                return
+            }
         }
     }
 

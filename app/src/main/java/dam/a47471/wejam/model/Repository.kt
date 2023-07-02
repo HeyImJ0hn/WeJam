@@ -49,7 +49,7 @@ class Repository {
         pPicUri: String,
         bannerUri: String
     ) {
-        val user = User(userId, username, realName, email, bio, pPicUri, bannerUri, 0.0, 0.0)
+        val user = User(userId, username.lowercase(), realName, email, bio, pPicUri, bannerUri, 0.0, 0.0)
         database.child("users").child(userId).setValue(user)
         firestore.collection("friends").document(userId)
             .set(hashMapOf("friends" to listOf<String>()))
@@ -64,7 +64,7 @@ class Repository {
         val users = database.child("users")
         val userReference = users.child(userId)
 
-        userReference.child("username").setValue(username)
+        userReference.child("username").setValue(username.lowercase())
         userReference.child("realName").setValue(realName)
         //userReference.child("email").setValue(email)
         userReference.child("bio").setValue(bio)
@@ -230,38 +230,40 @@ class Repository {
     fun getEventsByAttendee(attendee: String): LiveData<List<Event>> {
         val eventsLiveData = MutableLiveData<List<Event>>()
 
-        firestore.collection("events").whereArrayContains("attendees", attendee)
-            .get().addOnSuccessListener { querySnapshot: QuerySnapshot ->
-                val events = mutableListOf<Event>()
-                for (document in querySnapshot.documents) {
-                    val owner = document.getString("owner")!!
-                    val name = document.getString("name")!!
-                    val type = document.getString("type")!!
-                    val locationName = document.getString("locationName")!!
-                    val lat = document.getDouble("lat")!!
-                    val long = document.getDouble("long")!!
-                    val time = document.getString("time")!!
-                    val date = document.getString("date")!!
-                    val attendees = document.get("attendees")!!
-
-                    events.add(
-                        Event(
-                            owner,
-                            name,
-                            EventType.valueOf(type),
-                            locationName,
-                            lat,
-                            long,
-                            time,
-                            date,
-                            attendees as MutableList<String>
-                        )
-                    )
-                }
-                eventsLiveData.value = events
-            }.addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
+        firestore.collection("events").whereArrayContains("attendees", attendee).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.w(TAG, "Error getting documents: ", error)
+                return@addSnapshotListener
             }
+
+            val events = mutableListOf<Event>()
+            for (document in value!!.documents) {
+                val owner = document.getString("owner")!!
+                val name = document.getString("name")!!
+                val type = document.getString("type")!!
+                val locationName = document.getString("locationName")!!
+                val lat = document.getDouble("lat")!!
+                val long = document.getDouble("long")!!
+                val time = document.getString("time")!!
+                val date = document.getString("date")!!
+                val attendees = document.get("attendees")!!
+
+                events.add(
+                    Event(
+                        owner,
+                        name,
+                        EventType.valueOf(type),
+                        locationName,
+                        lat,
+                        long,
+                        time,
+                        date,
+                        attendees as MutableList<String>
+                    )
+                )
+            }
+            eventsLiveData.value = events
+        }
         return eventsLiveData
     }
 
@@ -359,8 +361,6 @@ class Repository {
         val dbQuery = Firebase.database.getReference("users").orderByChild("username")
             .startAt(query.lowercase())
             .endAt(query.lowercase() + "\uf8ff")
-
-        println(query)
 
         if (query.isEmpty()) {
             _userSearchResult.value = emptyList()

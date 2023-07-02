@@ -11,4 +11,5 @@
     <color name="gradient_pink">#FFE6007E</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="gray">#FF8F9193</color>
+    <color name="notification_red">#B81C1C</color>
 </resources>

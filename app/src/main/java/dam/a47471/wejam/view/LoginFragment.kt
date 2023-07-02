@@ -45,7 +45,7 @@ class LoginFragment : Fragment() {
 
         viewModel.isLoginSuccessful.observe(viewLifecycleOwner) { isLoginSuccessful ->
             if (isLoginSuccessful) {
-                Toast.makeText(context, "Logged in: " + FirebaseAuth.getInstance().currentUser!!.displayName, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Logged in", Toast.LENGTH_SHORT).show()
             } else {
                 (activity as MainActivity).loadingDialog.dismiss()
                 Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()

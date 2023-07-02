@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.DataSnapshot
 import dam.a47471.wejam.model.Event
 import dam.a47471.wejam.model.EventType
 import dam.a47471.wejam.model.Repository
@@ -77,6 +78,14 @@ class NearbyViewModel : ViewModel() {
 
     fun getFavouriteEvents(): LiveData<List<String>?> {
         return repository.getFavouriteEvents()
+    }
+
+    fun getGoogleUserPicture(id: String): Task<DataSnapshot> {
+        return repository.getGoogleProfilePicture(id)
+    }
+
+    fun getDefaultAvatar(): Task<Uri> {
+        return repository.getDefaultAvatar()
     }
 
 }

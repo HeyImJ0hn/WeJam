@@ -142,10 +142,26 @@ class EventInfoDialog : BottomSheetDialogFragment() {
         viewModel.user.observe(viewLifecycleOwner) {
             organizer = it
             binding.owner.text = it.username
-            viewModel.getUserPicture(event.owner).addOnSuccessListener { it2 ->
+
+            viewModel.getUserPicture(event.owner).addOnSuccessListener {uri ->
                 Glide.with(requireContext())
-                    .load(it2)
+                    .load(uri)
                     .into(binding.ownerImage)
+            }.addOnFailureListener {
+                println("Error loading user picture, checking for google image.")
+                viewModel.getGoogleUserPicture(event.owner).addOnSuccessListener {data ->
+                    println("Got google image: ${data.value}")
+                    Glide.with(requireContext())
+                        .load(data.value)
+                        .into(binding.ownerImage)
+                }.addOnFailureListener {
+                    println("Error loading google user picture, loading default avatar.")
+                    viewModel.getDefaultAvatar().addOnSuccessListener {uri2 ->
+                        Glide.with(requireContext())
+                            .load(uri2)
+                            .into(binding.ownerImage)
+                    }
+                }
             }
 
             if (event.owner == Firebase.auth.currentUser!!.uid) {

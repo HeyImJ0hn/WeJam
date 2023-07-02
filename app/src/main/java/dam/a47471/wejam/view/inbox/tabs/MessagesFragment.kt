@@ -15,6 +15,7 @@ import dam.a47471.wejam.databinding.FragmentInboxMessagesBinding
 import dam.a47471.wejam.model.User
 import dam.a47471.wejam.utils.GeneralUserRecyclerViewAdapter
 import dam.a47471.wejam.view.inbox.ChatFragment
+import dam.a47471.wejam.view.inbox.adapter.MessagesListAdapter
 import dam.a47471.wejam.viewmodel.inbox.InboxViewModel
 
 class MessagesFragment : Fragment() {
@@ -22,7 +23,7 @@ class MessagesFragment : Fragment() {
     private lateinit var binding: FragmentInboxMessagesBinding
     private lateinit var viewModel: InboxViewModel
 
-    private lateinit var adapter: GeneralUserRecyclerViewAdapter
+    private lateinit var adapter: MessagesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +38,7 @@ class MessagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        adapter = GeneralUserRecyclerViewAdapter(emptyList(), itemClickedListener = {
+        adapter = MessagesListAdapter(emptyList(), itemClickedListener = {
             val bundle = Bundle().apply {
                 putParcelable("user", it as User)
             }
@@ -63,7 +64,7 @@ class MessagesFragment : Fragment() {
                     viewModel.loadUser(chat.members!!.filter { it != Firebase.auth.currentUser!!.uid }[0])
                     viewModel.user.observe(viewLifecycleOwner) { user ->
                         users.add(user)
-                        adapter.updateUserList(users.distinct())
+                        adapter.updateChatList(users.distinct())
                         binding.recyclerView.adapter = adapter
                     }
                 }

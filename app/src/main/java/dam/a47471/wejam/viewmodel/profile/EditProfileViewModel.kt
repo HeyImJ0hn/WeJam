@@ -74,4 +74,11 @@ class EditProfileViewModel : ViewModel() {
         }
     }
 
+    fun searchUsers(username: String) {
+        repository.searchUsers(username)
+    }
+    fun searchResult(): LiveData<List<User>> {
+        return repository.userSearchResult
+    }
+
 }

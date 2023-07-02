@@ -3,11 +3,12 @@ package dam.a47471.wejam.utils
 import dam.a47471.wejam.model.Event
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class Utils {
     companion object {
         fun isCurrentDateAfter(targetDateStr: String): Boolean {
-            val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
+            val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.getDefault())
             val currentDate = LocalDate.now()
             val targetDate = LocalDate.parse(targetDateStr, formatter)
             return currentDate.isAfter(targetDate)

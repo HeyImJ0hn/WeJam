@@ -51,8 +51,8 @@ class SignUpFragment : Fragment() {
             }
         }
 
-        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner) {
-            if (it) {
+        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner) { isSuccessful ->
+            if (isSuccessful) {
                 Toast.makeText(context, "Registered user", Toast.LENGTH_SHORT).show()
             } else {
                 (activity as MainActivity).loadingDialog.dismiss()

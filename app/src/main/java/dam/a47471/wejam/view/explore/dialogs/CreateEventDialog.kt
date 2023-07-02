@@ -29,6 +29,11 @@ import dam.a47471.wejam.databinding.DialogNearbyCreateEventBinding
 import dam.a47471.wejam.model.EventType
 import dam.a47471.wejam.view.explore.tabs.MapFragment
 import dam.a47471.wejam.viewmodel.explore.NearbyViewModel
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Date
 
 class CreateEventDialog : BottomSheetDialogFragment() {
 
@@ -117,7 +122,9 @@ class CreateEventDialog : BottomSheetDialogFragment() {
             datePicker.addOnPositiveButtonClickListener {
                 binding.dateInput.isErrorEnabled = false
 
-                binding.dateEditText.setText(datePicker.headerText)
+                val dateFormat = SimpleDateFormat("MMM d, yyyy")
+                val date = Date(datePicker.selection!!)
+                binding.dateEditText.setText(dateFormat.format(date))
                 binding.dateEditText.clearFocus()
             }
 
@@ -138,7 +145,13 @@ class CreateEventDialog : BottomSheetDialogFragment() {
             timePicker.addOnPositiveButtonClickListener {
                 binding.timeInput.isErrorEnabled = false
 
-                binding.timeEditText.setText("${timePicker.hour}:${timePicker.minute}")
+                var minute = timePicker.minute.toString()
+                if (minute == "0")
+                   minute = "00"
+                else if (minute.length == 1)
+                    minute = "0${timePicker.minute}"
+
+                binding.timeEditText.setText("${timePicker.hour}:$minute")
                 binding.timeEditText.clearFocus()
             }
 

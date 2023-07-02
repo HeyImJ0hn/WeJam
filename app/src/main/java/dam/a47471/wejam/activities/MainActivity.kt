@@ -98,11 +98,6 @@ class MainActivity : AppCompatActivity() {
     public override fun onStart() {
         super.onStart()
         FirebaseAuth.getInstance().addAuthStateListener(authStateListener)
-
-        /*val currentUser = auth.currentUser
-        if (currentUser != null) {
-            Toast.makeText(baseContext, "Automatically signed in", Toast.LENGTH_SHORT).show();
-        }*/
     }
 
     override fun onStop() {

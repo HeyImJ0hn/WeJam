@@ -54,24 +54,21 @@ class LoginViewModel : ViewModel() {
             return
         }
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    repository.writeNewUser(
-                        user!!.uid,
-                        name,
-                        "",
-                        email,
-                        "",
-                        "https://firebasestorage.googleapis.com/v0/b/***REMOVED***.appspot.com/o/defaults%2Favatar.png?alt=media&token=da857e8d-320a-4cc8-a6c9-6ef370aa445a",
-                        Uri.EMPTY.toString()
-                    )
-                    _isRegistrationSuccessful.value = true
-                } else {
-                    _isRegistrationSuccessful.value = false
-                }
-            }
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
+            _isRegistrationSuccessful.value = true
+            repository.writeNewUser(
+                Firebase.auth.currentUser!!.uid,
+                name,
+                "",
+                email,
+                "",
+                "https://firebasestorage.googleapis.com/v0/b/***REMOVED***.appspot.com/o/defaults%2Favatar.png?alt=media&token=da857e8d-320a-4cc8-a6c9-6ef370aa445a",
+                Uri.EMPTY.toString()
+            )
+        }.addOnFailureListener {
+            println(it)
+            _isRegistrationSuccessful.value = false
+        }
     }
 
     fun registerUserToken(idToken: String) {
@@ -81,7 +78,6 @@ class LoginViewModel : ViewModel() {
         firebaseAuth.signInWithCredential(firebaseCredential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(ContentValues.TAG, "signInWithCredential:success")
                     val user = Firebase.auth.currentUser!!
                     repository.writeNewUser(
@@ -95,7 +91,6 @@ class LoginViewModel : ViewModel() {
                     )
                     _isRegistrationSuccessful.value = true
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(ContentValues.TAG, "signInWithCredential:failure", task.exception)
                     _isRegistrationSuccessful.value = false
                 }
@@ -110,6 +105,7 @@ class LoginViewModel : ViewModel() {
     fun searchUsers(username: String) {
         repository.searchUsers(username)
     }
+
     fun searchResult(): LiveData<List<User>> {
         return repository.userSearchResult
     }

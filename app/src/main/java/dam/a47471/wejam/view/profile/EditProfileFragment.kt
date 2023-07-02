@@ -26,6 +26,7 @@ import com.google.firebase.storage.ktx.storage
 import dam.a47471.wejam.R
 import dam.a47471.wejam.activities.InternalActivity
 import dam.a47471.wejam.databinding.FragmentEditProfileBinding
+import dam.a47471.wejam.model.User
 import dam.a47471.wejam.viewmodel.profile.EditProfileViewModel
 import java.io.InputStream
 
@@ -36,6 +37,8 @@ class EditProfileFragment : Fragment(), MenuProvider {
     private lateinit var binding: FragmentEditProfileBinding
     private lateinit var pickPhotoLauncher: ActivityResultLauncher<String>
     private lateinit var activity: InternalActivity
+
+    private lateinit var user: User
 
     private val STORAGE_PERMISSION_CODE = 1
 
@@ -108,21 +111,36 @@ class EditProfileFragment : Fragment(), MenuProvider {
             binding.bioInput.setText(user.bio)
             if (user.banner != "")
                 Glide.with(requireContext()).load(user.banner).into(binding.banner)
+            this.user = user
         }
         binding.emailInput.setText(auth.currentUser?.email)
         if (auth.currentUser!!.photoUrl != null)
             Glide.with(requireContext()).load(auth.currentUser!!.photoUrl).into(binding.profileImage)
 
         binding.updateBtn.setOnClickListener {
-            viewModel.updateProfile(
-                binding.usernameInput.text.toString(),
-                binding.realNameInput.text.toString(),
-                binding.emailInput.text.toString(),
-                binding.bioInput.text.toString()
-            )
-            activity.loadingDialog.show()
-            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
-            Toast.makeText(requireContext(), "Updated Profile", Toast.LENGTH_SHORT).show()
+            if (binding.usernameInput.text.isEmpty()) {
+                Toast.makeText(requireContext(), "Username cannot be empty", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            viewModel.searchUsers(binding.usernameInput.text.toString())
+            viewModel.searchResult().observe(viewLifecycleOwner) { users ->
+                if (users.isNotEmpty() && binding.usernameInput.text.toString() != user.username && users[0].username == binding.usernameInput.text.toString()) {
+                    Toast.makeText(requireContext(), "Username already taken", Toast.LENGTH_SHORT).show()
+                    return@observe
+                }
+
+                viewModel.updateProfile(
+                    binding.usernameInput.text.toString(),
+                    binding.realNameInput.text.toString(),
+                    binding.emailInput.text.toString(),
+                    binding.bioInput.text.toString()
+                )
+
+                activity.loadingDialog.show()
+                findNavController().navigate(R.id.profileFragment)
+                Toast.makeText(requireContext(), "Updated Profile", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.changePicture.setOnClickListener {
@@ -165,7 +183,7 @@ class EditProfileFragment : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_back -> {
-                findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                findNavController().navigate(R.id.profileFragment)
                 true
             }
             else -> false
