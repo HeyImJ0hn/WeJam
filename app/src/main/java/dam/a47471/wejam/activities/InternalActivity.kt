@@ -118,43 +118,4 @@ class InternalActivity : AppCompatActivity() {
         super.onStop()
         FirebaseAuth.getInstance().removeAuthStateListener(authStateListener)
     }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    fun resizeImage(imageResource: Int): Drawable { // R.drawable.large_image
-        // Get device dimensions
-        val display: Display = windowManager?.defaultDisplay!!
-        val deviceWidth = display.width.toDouble()
-        val bd = this.resources.getDrawable(
-            imageResource
-        ) as BitmapDrawable
-        val imageHeight = bd.bitmap.height.toDouble()
-        val imageWidth = bd.bitmap.width.toDouble()
-        val ratio = deviceWidth / imageWidth
-        val newImageHeight = (imageHeight * ratio).toInt()
-        val bMap = BitmapFactory.decodeResource(resources, imageResource)
-        return BitmapDrawable(
-            resources,
-            getResizedBitmap(bMap, newImageHeight, deviceWidth.toInt())
-        )
-    }
-
-    private fun getResizedBitmap(bm: Bitmap, newHeight: Int, newWidth: Int): Bitmap? {
-        val width = bm.width
-        val height = bm.height
-        val scaleWidth = newWidth.toFloat() / width
-        val scaleHeight = newHeight.toFloat() / height
-
-        // create a matrix for the manipulation
-        val matrix = Matrix()
-
-        // resize the bit map
-        matrix.postScale(scaleWidth, scaleHeight)
-
-        // recreate the new Bitmap
-        return Bitmap.createBitmap(
-            bm, 0, 0, width, height,
-            matrix, false
-        )
-    }
-
 }

@@ -52,13 +52,13 @@ class MessagesFragment : Fragment() {
             )
         }, requireContext())
 
+        binding.tvNoChats.visibility = View.VISIBLE
+
         viewModel.getUserChats(Firebase.auth.currentUser!!.uid)
             .observe(viewLifecycleOwner) { chats ->
                 val users = mutableListOf<User>()
-                if (chats.isEmpty()) {
-                    binding.tvNoChats.visibility = View.VISIBLE
-                    return@observe
-                }
+                if (chats.isNotEmpty())
+                    binding.tvNoChats.visibility = View.GONE
 
                 chats.forEach { chat ->
                     viewModel.loadUser(chat.members!!.filter { it != Firebase.auth.currentUser!!.uid }[0])

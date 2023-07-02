@@ -49,7 +49,7 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
 
-        binding.banner.setImageDrawable(activity.resizeImage(R.drawable.img_banner))
+        Glide.with(requireContext()).load(R.drawable.img_banner).into(binding.banner)
         if (auth.currentUser!!.photoUrl != null)
             Glide.with(requireContext()).load(auth.currentUser!!.photoUrl)
                 .into(binding.profileImage)

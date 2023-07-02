@@ -16,16 +16,8 @@ class HomeViewModel : ViewModel() {
     val user: LiveData<User>
         get() = _user
 
-    fun getEvents(): LiveData<List<Event>> {
-        return repository.getEvents()
-    }
-
     fun getEventsByAttendee(userId: String): LiveData<List<Event>> {
         return repository.getEventsByAttendee(userId)
-    }
-
-    fun getUserPicture(id: String): Task<Uri> {
-        return repository.getProfilePicture(id)
     }
 
     fun loadUser(userId: String) {
@@ -34,24 +26,8 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun updateLocation(userId: String, lat: Double, long: Double) {
-        repository.updateLocation(userId, lat, long)
-    }
-
     fun getEventByName(name: String): LiveData<Event?> {
         return repository.getEventByName(name)
-    }
-
-    fun addAttendee(event: Event, userId: String) {
-        repository.addAttendee(event, userId)
-    }
-
-    fun removeAttendee(event: Event, userId: String) {
-        repository.removeAttendee(event, userId)
-    }
-
-    fun deleteEvent(event: Event) {
-        return repository.deleteEvent(event)
     }
 
     fun getFriends(): LiveData<List<String>> {

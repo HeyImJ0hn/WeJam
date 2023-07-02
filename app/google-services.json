@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "***REMOVED***",
+    "firebase_url": "***REMOVED***",
+    "project_id": "***REMOVED***",
+    "storage_bucket": "***REMOVED***.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:***REMOVED******REMOVED***",
+        "android_client_info": {
+          "package_name": "dam.a47471.wejam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "***REMOVED******REMOVED***",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "***REMOVED***"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "***REMOVED******REMOVED***",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
