@@ -1,11 +1,21 @@
 # WeJam
  Android App for Musicians and Music fans
  
- ### Preview:
- ![alt text](https://i.imgur.com/j7dm0Fa.jpeg "Login")
- ![alt text](https://i.imgur.com/AqkE2ow.jpeg "Attending Page")
- ![alt text](https://i.imgur.com/qBqRPCB.jpeg "Nearby Event List")
- ![alt text](https://i.imgur.com/4lkAbD2.png "Event Map")
- ![alt text](https://i.imgur.com/QS0jB7P.jpeg "Profile")
- ![alt text](https://i.imgur.com/jcRVIlj.jpeg "Event Info")
- ![alt text](https://i.imgur.com/ssqaxyH.jpeg "Messages Tab")
+### Preview:
+Login Page:
+![alt text](https://i.imgur.com/py2sPSX.png "Login")
+ 
+Attending Events Page:
+![alt text](https://i.imgur.com/6NHfm6N.png "Attending Page")
+
+Event Map:
+![alt text](https://i.imgur.com/88Ixwza.png "Event Map")
+
+User Search:
+![alt text](https://i.imgur.com/8ZV9nsQ.png "User Search")
+
+Chats Page:
+![alt text](https://i.imgur.com/OYfmaSM.png "Chats")
+
+User Profile:
+![alt text](https://i.imgur.com/dGkchF3.png "Profile")
